@@ -12,7 +12,9 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
+        "DB_USERNAME": "sa",
         "DB_NAME": "PastaPackages3",
+        "DB_PASSWORD": "1234",
         "DB_SERVER": ".\\sqlexpress",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -41,7 +41,9 @@ namespace TestCore
 
             // Set connection string values from Enviornment Variabels
             DBHelper.SetConnectionString(Environment.GetEnvironmentVariable("DB_SERVER"),
-                                        Environment.GetEnvironmentVariable("DB_NAME"));
+                                        Environment.GetEnvironmentVariable("DB_NAME"),
+                                        Environment.GetEnvironmentVariable("DB_USERNAME"),
+                                        Environment.GetEnvironmentVariable("DB_PASSWORD"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
