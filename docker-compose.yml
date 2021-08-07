@@ -5,6 +5,10 @@ networks:
 
 services:
   webapp:
+    environment:
+    - ASPNETCORE_ENVIRONMENT=Development
+    - DB_NAME=PastaPackages
+    - DB_SERVER=db
     image: inventorylight
     build:
       context: .
@@ -12,7 +16,7 @@ services:
     ports:
     - "801:80"
     networks:
-    - pasta-network
+    - inventory-network
     depends_on:
     - db
 
@@ -23,8 +27,3 @@ services:
     dockerfile: TestCore/Dockerfile.database
    networks:
    - inventory-network
-   volumes:
-   - mssqldata: /var/opt/mssql
-
-volumes:
-  mssqldata
