@@ -1,11 +1,11 @@
 version: '3.4'
 
 networks:
-  pasta-network:
+  inventory-network:
 
 services:
   webapp:
-    image: ${DOCKER_REGISTRY-}testcore
+    image: inventorylight
     build:
       context: .
       dockerfile: TestCore/Dockerfile
@@ -16,4 +16,15 @@ services:
     depends_on:
     - db
 
+  db:
+   image: inventorylight_db
+   build:
+    context: .
+    dockerfile: TestCore/Dockerfile.database
+   networks:
+   - inventory-network
+   volumes:
+   - mssqldata: /var/opt/mssql
 
+volumes:
+  mssqldata
