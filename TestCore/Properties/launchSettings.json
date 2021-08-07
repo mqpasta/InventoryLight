@@ -12,7 +12,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "DB_NAME": "PastaPackages",
+        "DB_NAME": "PastaPackages3",
         "DB_SERVER": ".\\sqlexpress",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

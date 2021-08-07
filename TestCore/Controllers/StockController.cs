@@ -24,6 +24,11 @@ namespace TestCore.Controllers
             return View(rep.GetAllStatus());
         }
 
+        public IActionResult Wearhouse()
+        {
+            return View(rep.GetWearhouseStock());
+        }
+
         private void SetDropDownLists()
         {
             ViewBag.VBLocationList = _locRep.GetLocations();

@@ -1,7 +1,7 @@
-CREATE DATABASE [PastaPackages2]
+CREATE DATABASE [PastaPackages]
 GO
 
-USE [PastaPackages2]
+USE [PastaPackages]
 GO
 /****** Object:  Table [dbo].[Location]    Script Date: 8/7/2021 8:56:29 PM ******/
 SET ANSI_NULLS ON
@@ -28,8 +28,8 @@ CREATE TABLE [dbo].[Product](
 	[ProductId] [bigint] IDENTITY(1,1) NOT NULL,
 	[ProductCode] [int] NOT NULL,
 	[ProductName] [nvarchar](50) NOT NULL,
-	[PurchasePrice] [decimal](18, 0) NOT NULL,
-	[SalePrice] [decimal](18, 0) NOT NULL,
+	[PurchasePrice] [decimal](18, 2) NOT NULL,
+	[SalePrice] [decimal](18, 2) NOT NULL,
 	[LastUpdate] [datetime] NOT NULL,
  CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
 (
@@ -49,8 +49,8 @@ CREATE TABLE [dbo].[StockMovement](
 	[ToLocationId] [bigint] NOT NULL,
 	[FromLocationId] [bigint] NULL,
 	[Qty] [int] NOT NULL,
-	[PurchasePrice] [decimal](18, 0) NOT NULL,
-	[SalePrice] [decimal](18, 0) NOT NULL,
+	[PurchasePrice] [decimal](18, 2) NOT NULL,
+	[SalePrice] [decimal](18, 2) NOT NULL,
 	[LastUpdate] [datetime] NOT NULL,
 	[StockMovementType] [int] NOT NULL,
  CONSTRAINT [PK_StockMovement] PRIMARY KEY CLUSTERED 

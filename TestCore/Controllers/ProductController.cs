@@ -16,12 +16,6 @@ namespace TestCore.Controllers
     {
         IProductRepository rep = new SqlProductRepository();
 
-        public ProductController(IProductRepository productRepository)
-        {
-            // Causing reseting the collection
-            //rep = new FakeProductRepository();
-        }
-
         public IActionResult Index()
         {
             return View("ShowAll", rep.GetProducts());

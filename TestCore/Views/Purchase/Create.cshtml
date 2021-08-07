@@ -24,14 +24,14 @@
                 <span asp-validation-for="ToLocationId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StockMovementId" class="control-label"></label>
+                @*<label asp-for="StockMovementId" class="control-label"></label>*@
                 @*<input asp-for="StockMovementId" class="form-control" />*@
                 <span asp-validation-for="StockMovementId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductId" class="control-label"></label>
                 @*<input asp-for="ProductId" class="form-control" />*@
-                <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductName"))" class="form-control"></select>
+                <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductCodeName"))" class="form-control"></select>
                 <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">

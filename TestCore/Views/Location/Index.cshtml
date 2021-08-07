@@ -9,7 +9,7 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<table class="table">
+<table class="table" id="LocationList">
     <thead>
         <tr>
             @*<th>
@@ -46,3 +46,9 @@
         }
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        $('#LocationList').DataTable();
+    });
+</script>

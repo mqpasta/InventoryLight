@@ -13,5 +13,6 @@ namespace TestCore.Models.IRepository
         List<StockStatus> GetForLocation(long locationId, bool isSummarize = false);
         List<StockStatus> GetForProduct(long productId, bool isSummarize = false);
         List<StockStatus> GetFor(long locationId, long productId, bool isSummarize = false);
+        List<StockStatus> GetWearhouseStock();
     }
 }

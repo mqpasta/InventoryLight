@@ -113,5 +113,30 @@ namespace TestCore.Models.SqlRepository
 
             return stockStatuses;
         }
+
+        public List<StockStatus> GetWearhouseStock()
+        {
+            List<StockStatus> statuses = new List<StockStatus>();
+            string query = "SELECT * from ViewWearhouseStock";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            {
+                con.Open();
+                DataSet ds = DBHelper.LoadData(con, query);
+                if(ds.Tables.Count>0)
+                {
+                    foreach(DataRow r in ds.Tables[0].Rows)
+                    {
+                        statuses.Add(new StockStatus()
+                        {
+                            ProductName = Convert.ToString(r["ProductName"]),
+                            BalanceQuantity = Convert.ToInt32(r["BalanceQuantity"])
+                        });
+                    }
+                }
+            }
+
+            return statuses;
+        }
     }
 }

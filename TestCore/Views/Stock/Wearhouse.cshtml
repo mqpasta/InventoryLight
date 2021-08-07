@@ -1,0 +1,78 @@
+﻿@model IEnumerable<TestCore.Models.StockStatus>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Index</h2>
+
+<p>
+    @*<a asp-action="Create">Create New</a>*@
+</p>
+
+@*<div>
+    <form asp-action="Search" method="get">
+        <fieldset>
+            <div class="form-group">
+                Location : <select name="LocationId" for="LocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))"><option value="all">All</option></select> |
+                Product : <select name="ProductId" for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductName"))"><option value="all">All</option></select>
+                Summarize : <input type="checkbox" name="summarize" />
+                <input type="submit" value="Filter" class="btn btn-default" />
+            </div>
+        </fieldset>
+    </form>*@
+</div>
+
+<table class="table" id="WearhouseStockStatus">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.LocationName)
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.InQuantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OutQuantity)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.BalanceQuantity)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.LocationName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InQuantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutQuantity)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.BalanceQuantity)
+                </td>
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#WearhouseStockStatus').DataTable();
+    });
+</script>

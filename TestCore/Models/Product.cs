@@ -33,5 +33,13 @@ namespace TestCore.Models
         [DisplayName("Sale Price")]
         public decimal SalePrice { get; set; }
 
+        public string ProductCodeName
+        {
+            get
+            {
+                return string.Format("{0} - {1}", ProductCode, ProductName);
+            }
+        }
+
     }
 }
