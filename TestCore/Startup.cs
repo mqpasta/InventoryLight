@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using TestCore.Models;
+using TestCore.Models.IRepository;
+using TestCore.Models.FakeRepository;
+using TestCore.Models.SqlRepository;
+
 namespace TestCore
 {
     public class Startup
@@ -33,11 +38,24 @@ namespace TestCore
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Set connection string values from Enviornment Variabels
+            DBHelper.SetConnectionString(Environment.GetEnvironmentVariable("DB_SERVER"),
+                                        Environment.GetEnvironmentVariable("DB_NAME"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            foreach (Product p in HelperFunctions.CreateTempProducts())
+                FakeProductRepository._products.Add(p);
+
+            foreach (Location l in HelperFunctions.CreateTempLocations())
+                FakeLocationRepository._locations.Add(l);
+
+            //FakePurchaseRepository.StockMovements.AddRange(
+            //    HelperFunctions.CreateTempPurchaseMovements());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

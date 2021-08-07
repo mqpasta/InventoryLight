@@ -1,0 +1,66 @@
+﻿@model IEnumerable<TestCore.Models.SaleMovement>
+
+@{
+    ViewData["Title"] = "Transfers";
+}
+
+<h2>Transfers</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.StockMovementId)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromLocationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToLocationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.MovementType)
+                </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            @Html.DisplayFor(modelItem => item.StockMovementId)
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromLocation.LocationName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToLocation.LocationName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.StockMovementId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.StockMovementId })
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

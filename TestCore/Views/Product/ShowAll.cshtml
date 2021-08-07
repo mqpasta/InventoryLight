@@ -1,0 +1,52 @@
+﻿@model List<TestCore.Models.Product>
+
+@{
+    ViewData["Title"] = "View Products";
+}
+
+<h2>Products</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model[0].ProductCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].PurchasePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].SalePrice)
+            </th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    @foreach (Product p in Model)
+    {
+        @Html.DisplayFor(model => p.ProductId)
+        <tr>
+            <td>
+                @Html.DisplayFor(model => p.ProductCode)
+            </td>
+            <td>
+                @Html.DisplayFor(model => p.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => p.PurchasePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(model => p.SalePrice)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = p.ProductId }) |
+                @Html.ActionLink("Delete", "Remove", new { id = p.ProductId })
+            </td>
+        </tr>
+    }
+</table>

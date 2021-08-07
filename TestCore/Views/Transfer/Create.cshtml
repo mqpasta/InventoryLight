@@ -1,0 +1,67 @@
+﻿@model TestCore.Models.SaleMovement
+
+@{
+    ViewData["Title"] = "Transfers";
+}
+
+<h2>Transfers</h2>
+
+<h4>Create New</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Save">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @*<label asp-for="StockMovementId" class="control-label"></label>*@
+                <input asp-for="StockMovementId" class="form-control" />
+                <span asp-validation-for="StockMovementId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FromLocationId" class="control-label"></label>
+                <br />
+                <select asp-for="FromLocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control"></select>
+                <span asp-validation-for="FromLocationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToLocationId" class="control-label"></label>
+                <br />
+                <select asp-for="ToLocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control"></select>
+                <span asp-validation-for="ToLocationId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                @*<input asp-for="ProductId" class="form-control" />*@
+                <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductName"))" class="form-control"></select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @*<label asp-for="MovementType" class="control-label"></label>*@
+                <input asp-for="MovementType" class="form-control" />
+                <span asp-validation-for="MovementType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

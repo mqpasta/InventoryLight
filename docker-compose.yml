@@ -1,0 +1,19 @@
+version: '3.4'
+
+networks:
+  pasta-network:
+
+services:
+  webapp:
+    image: ${DOCKER_REGISTRY-}testcore
+    build:
+      context: .
+      dockerfile: TestCore/Dockerfile
+    ports:
+    - "801:80"
+    networks:
+    - pasta-network
+    depends_on:
+    - db
+
+
