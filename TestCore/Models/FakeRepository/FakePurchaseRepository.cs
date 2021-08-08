@@ -44,6 +44,11 @@ namespace TestCore.Models.FakeRepository
             return found;
         }
 
+        public IEnumerable GetPurchases(long purchaseOrderId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable GetPurchases()
         {
             var founds = StockMovements.FindAll(x => x.MovementType == StockMovementType.Purchase);

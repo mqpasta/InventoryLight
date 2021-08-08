@@ -15,8 +15,9 @@ namespace TestCore.Models.SqlRepository
         public void Add(PurchaseMovement purchase)
         {
             string query = "Insert Into StockMovement(Date, ProductId," +
-                                        "ToLocationId, Qty, PurchasePrice, SalePrice, StockMovementType) " +
-                                "Values('{0}',{1},{2},{3},{4},{5},{6});";
+                                        "ToLocationId, Qty, PurchasePrice, SalePrice, StockMovementType," +
+                                        "PurchaseOrderId) " +
+                                "Values('{0}',{1},{2},{3},{4},{5},{6},{7});";
 
             string qryStock = "IF NOT EXISTS(select 1 from StockStatus " +
                 "where ProductId = {0} and LocationId={1}) " +
@@ -36,7 +37,8 @@ namespace TestCore.Models.SqlRepository
                                                               purchase.Quantity,
                                                               purchase.PurchasePrice,
                                                               0, // SalePrice
-                                                              Convert.ToInt32(StockMovementType.Purchase)),
+                                                              Convert.ToInt32(StockMovementType.Purchase),
+                                                              purchase.PurchaseOrderId),
                                                               trans);
                     // Update StockStatus
                     DBHelper.Execute(con, string.Format(qryStock, purchase.ProductId,
@@ -122,28 +124,40 @@ namespace TestCore.Models.SqlRepository
             {
                 con.Open();
                 DataSet ds = DBHelper.LoadData(con, string.Format(query, id));
+                con.Close();
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
                     DataRow r = ds.Tables[0].Rows[0];
+                    PurchaseMovement movement = LoadRow(r);
 
-                    PurchaseMovement movement = new PurchaseMovement()
-                    {
-                        StockMovementId = Convert.ToInt64(r["StockMovementId"]),
-                        Date = Convert.ToDateTime(r["Date"]),
-                        ProductId = Convert.ToInt64(r["ProductId"]),
-                        ToLocationId = Convert.ToInt64(r["ToLocationId"]),
-                        PurchasePrice = Convert.ToDecimal(r["PurchasePrice"]),
-                        Quantity = Convert.ToInt32(r["Qty"]),
-                        MovementType = StockMovementType.Purchase
-                    };
-                    con.Close();
                     return movement;
                 }
-                con.Close();
             }
 
             return null;
+        }
+
+        public IEnumerable GetPurchases(long purchaseOrderId)
+        {
+            string qryReceviedLiens = "SELECT * FROM StockMovement WHERE PurchaseOrderId = {0}";
+            List<PurchaseMovement> movements = new List<PurchaseMovement>();
+
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            {
+                con.Open();
+                DataSet ds = DBHelper.LoadData(con, string.Format(qryReceviedLiens, purchaseOrderId));
+                con.Close();
+
+                if (ds.Tables.Count > 0)
+                {
+                    foreach (DataRow r in ds.Tables[0].Rows)
+                    {
+                        movements.Add(LoadRow(r));
+                    }
+                }
+            }
+            return movements;
         }
 
         public IEnumerable GetPurchases()
@@ -160,21 +174,30 @@ namespace TestCore.Models.SqlRepository
                 {
                     foreach (DataRow r in ds.Tables[0].Rows)
                     {
-                        purchaseMovements.Add(new PurchaseMovement()
-                        {
-                            StockMovementId = Convert.ToInt64(r["StockMovementId"]),
-                            Date = Convert.ToDateTime(r["Date"]),
-                            ProductId = Convert.ToInt64(r["ProductId"]),
-                            ToLocationId = Convert.ToInt64(r["ToLocationId"]),
-                            PurchasePrice = Convert.ToDecimal(r["PurchasePrice"]),
-                            Quantity = Convert.ToInt32(r["Qty"]),
-                            MovementType = StockMovementType.Purchase
-                        });
+                        purchaseMovements.Add(LoadRow(r));
                     }
                 }
             }
 
             return purchaseMovements;
+        }
+
+        private PurchaseMovement LoadRow(DataRow r)
+        {
+            long? nullPurchaseOrderId = null;
+
+            return new PurchaseMovement()
+            {
+                StockMovementId = Convert.ToInt64(r["StockMovementId"]),
+                Date = Convert.ToDateTime(r["Date"]),
+                ProductId = Convert.ToInt64(r["ProductId"]),
+                ToLocationId = Convert.ToInt64(r["ToLocationId"]),
+                PurchasePrice = Convert.ToDecimal(r["PurchasePrice"]),
+                Quantity = Convert.ToInt32(r["Qty"]),
+                PurchaseOrderId = Convert.IsDBNull(r["PurchaseOrderId"]) ? 
+                                        nullPurchaseOrderId : Convert.ToInt64(r["PurchaseOrderId"]),
+                MovementType = StockMovementType.Purchase
+            };
         }
 
         public void Remove(long id)
