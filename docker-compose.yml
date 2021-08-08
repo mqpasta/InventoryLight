@@ -9,6 +9,8 @@ services:
     - ASPNETCORE_ENVIRONMENT=Development
     - DB_NAME=PastaPackages
     - DB_SERVER=db
+    - DB_USERNAME=sa
+    - DB_PASSWORD=King.1234
     image: inventorylight
     build:
       context: .
@@ -27,3 +29,8 @@ services:
     dockerfile: TestCore/Dockerfile.database
    networks:
    - inventory-network
+   volumes:
+   - mssqldata:/var/opt/mssql
+
+volumes:
+  mssqldata: 
