@@ -5,7 +5,7 @@ echo "$1"
 
 if [ ! -f tmp/app-initialized ]; then
   function initialize_app_database(){
-     sleep 5s
+     sleep 15s
 
      /run-script.sh & /opt/mssql/bin/sqlservr
 
