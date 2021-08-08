@@ -19,8 +19,8 @@
                 @Html.DisplayNameFor(model => model.ToLocationId)
             </th>
             @*<th>
-            @Html.DisplayNameFor(model => model.StockMovementId)
-        </th>*@
+                    @Html.DisplayNameFor(model => model.StockMovementId)
+                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.ProductId)
             </th>
@@ -30,42 +30,48 @@
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoodReceived)
+            </th>
             @*<th>
-            @Html.DisplayNameFor(model => model.MovementType)
-        </th>*@
+                    @Html.DisplayNameFor(model => model.MovementType)
+                </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ToLocation.LocationName)
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.StockMovementId)
-        </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchasePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.MovementType)
-        </td>*@
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.StockMovementId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.StockMovementId })
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToLocation.LocationName)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.StockMovementId)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchasePrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoodReceived)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.MovementType)
+                    </td>*@
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.StockMovementId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.StockMovementId })
+                </td>
+            </tr>
         }
     </tbody>
 </table>

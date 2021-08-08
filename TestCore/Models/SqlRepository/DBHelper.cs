@@ -14,12 +14,15 @@ namespace TestCore.Models.SqlRepository
     public class DBHelper
     {
         private static SqlConnection _connection;
-        private static string _connectionString = @"Data Source={0};Initial Catalog={1};User ID={2};Password={3};Trusted_Connection=False";
+        private static string _connectionString = @"Data Source={0};Initial Catalog={1};User ID={2};Password={3};Trusted_Connection={4}";
 
         public static void SetConnectionString(string dbServer, string dbName,
-                                                string userId, string password)
+                                                string userId, string password,
+                                                bool isLocal)
         {
-            _connectionString = string.Format(_connectionString, @dbServer, @dbName, userId, password);
+            _connectionString = string.Format(_connectionString, @dbServer, @dbName, 
+                                                userId, password,
+                                                isLocal? "True":"False");
             Console.WriteLine(_connectionString);
         }
 

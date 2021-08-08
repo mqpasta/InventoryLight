@@ -28,6 +28,11 @@
                 <span asp-validation-for="LocationName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="IsWearhouse" class="control-label"></label>
+                <input asp-for="IsWearhouse"  />
+                <span asp-validation-for="IsWearhouse" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>

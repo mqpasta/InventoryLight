@@ -1,0 +1,179 @@
+﻿
+@model TestCore.Models.PurchaseMovement
+
+@{
+    ViewData["Title"] = "Goods Receive";
+}
+
+<h2>Goods Receive</h2>
+
+<h4>Purchase Order</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                PO Number
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Product
+            </th>
+            <th>
+                Cost PKR
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Received Quantity
+            </th>
+            <th>
+                Balance Quantity
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @ViewBag.PurchaseOrder.PurchaseOrderId
+            </td>
+            <td>
+                @ViewBag.PurchaseOrder.PODate
+            </td>
+            <td>
+                @ViewBag.PurchaseOrder.Product.ProductName
+            </td>
+            <td>
+                @ViewBag.PurchaseOrder.PKRCost
+            </td>
+            <td>
+                @ViewBag.PurchaseOrder.Quantity
+            </td>
+            <td>
+                @ViewBag.PurchaseOrder.ReceivedQuantity
+            </td>
+            <td>
+                @ViewBag.PurchaseOrder.BalanceQuantity
+            </td>
+        </tr>
+    </tbody>
+</table>
+<hr />
+
+<h4>New Goods Receiving</h4>
+<div class="row">
+    <div class="col">
+        <form asp-action="Save">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-xs-3">
+                    <label asp-for="Date" class="control-label"></label>
+                    <input asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="form-group col-xs-3">
+                    <label asp-for="ToLocationId" class="control-label"></label>
+                    <select asp-for="ToLocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control"></select>
+                    <span asp-validation-for="ToLocationId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-xs-3">
+                    <label asp-for="Quantity" class="control-label"></label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>&nbsp;</label>
+                    <input type="submit" value="Create" class="btn btn-default form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*<label asp-for="PurchasePrice" class="control-label"></label>*@
+                <input asp-for="PurchasePrice" class="form-control" type="hidden" />
+                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                @*<label asp-for="ProductId" class="control-label"></label>*@
+                <input asp-for="ProductId" class="form-control" type="hidden" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+                @*<label asp-for="PurchaseOrderId" class="control-label"></label>*@
+                <input asp-for="PurchaseOrderId" class="form-control" type="hidden" />
+                <span asp-validation-for="PurchaseOrderId" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                    <label asp-for="StockMovementId" class="control-label"></label>
+                    <input asp-for="StockMovementId" class="form-control" />
+                    <span asp-validation-for="StockMovementId" class="text-danger"></span>
+                </div>*@
+            @*<div class="form-group">
+                    <label asp-for="MovementType" class="control-label"></label>
+                    <input asp-for="MovementType" class="form-control" />
+                    <span asp-validation-for="MovementType" class="text-danger"></span>
+                </div>*@
+
+        </form>
+    </div>
+</div>
+<div id="ModalPlaceHolder"></div>
+
+<hr />
+<h4>Goods Received</h4>
+@if (ViewBag.PurchaseMovements != null && ViewBag.PurchaseMovements.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ToLocationId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.PurchaseMovements)
+            {
+                <tr>
+                    <td>
+                        @item.Date.ToShortDateString()
+                    </td>
+                    <td>
+                        @item.ToLocation.LocationName
+                    </td>
+                    <td>
+                        @item.Quantity
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-link" data-toggle="ajax-modal"
+                                data-target="#editPurchase" data-url="@Url.Action("Edit", "Receive", new { id = item.StockMovementId })">
+                            Edit
+                        </button> |
+                        @*, "Receive", new { id = item.StockMovementId }*@
+                        @*<a href='@Url.Action("Create", "Receive", new { id = item.StockMovementId })'>Edit</a> |*@
+                        @*@Html.ActionLink("Edit", "Edit", new { id = item.StockMovementId }) |*@
+                        @Html.ActionLink("Delete", "Delete", new { id = item.StockMovementId })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No Goods Received.</p>
+}
+
+
+<div>
+    <a asp-action="Index" asp-controller="PurchaseOrder">Back to Purchase Orders</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

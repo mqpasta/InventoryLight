@@ -1,0 +1,48 @@
+﻿@model TestCore.Models.PurchaseMovement
+
+@{
+    ViewData["Title"] = "_EditPurchasePartial";
+}
+
+<div class="modal fade" id="editPurchase">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editPurchaseLabel">Edit Goods Received</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>x</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="/Receive/Edit">
+                    <div class="form-group">
+                        <label asp-for="Date"></label>
+                        <input asp-for="Date" class="form-control" />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ToLocationId"></label>
+                        <select asp-for="ToLocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control"></select>
+                        <span asp-validation-for="ToLocationId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Quantity"></label>
+                        <input asp-for="Quantity" class="form-control" />
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                    </div>
+                    <input asp-for="ProductId" type="hidden" />
+                    <input asp-for="PurchaseOrderId" type="hidden" />
+                    <input asp-for="PurchasePrice" type="hidden" />
+                    <input asp-for="StockMovementId" type="hidden" />
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-save="modal">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>

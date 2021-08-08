@@ -1,0 +1,135 @@
+﻿@model TestCore.Models.PurchaseOrder
+
+@{
+    ViewData["Title"] = "Purchase Orders";
+}
+
+<h2>Purchase Orders</h2>
+
+<h4>Edit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Update">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PurchaseOrderId" class="control-label"></label>
+                <input asp-for="PurchaseOrderId" class="form-control" readonly />
+                <span asp-validation-for="PurchaseOrderId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PODate" class="control-label"></label>
+                <input asp-for="PODate" class="form-control" />
+                <span asp-validation-for="PODate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductCodeName"))" class="form-control"></select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label asp-for="Quantity" class="control-label"></label>
+                        <input asp-for="Quantity" class="form-control" />
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ReceivedQuantity" class="control-label"></label>
+                        <input asp-for="ReceivedQuantity" class="form-control" readonly value="0" />
+                        <span asp-validation-for="ReceivedQuantity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="BalanceQuantity" class="control-label"></label>
+                        <input asp-for="BalanceQuantity" class="form-control" readonly value="0" />
+                        <span asp-validation-for="BalanceQuantity" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label asp-for="RMBRate" class="control-label"></label>
+                        <input asp-for="RMBRate" class="form-control" />
+                        <span asp-validation-for="RMBRate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="ConvRate" class="control-label"></label>
+                        <input asp-for="ConvRate" class="form-control"  />
+                        <span asp-validation-for="ConvRate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="RMBAmount" class="control-label"></label>
+                        <input asp-for="RMBAmount" class="form-control" readonly />
+                        <span asp-validation-for="RMBAmount" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <label asp-for="PKRCost" class="control-label"></label>
+                        <input asp-for="PKRCost" class="form-control" readonly />
+                        <span asp-validation-for="PKRCost" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="PKRAmount" class="control-label"></label>
+                        <input asp-for="PKRAmount" class="form-control" readonly />
+                        <span asp-validation-for="PKRAmount" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsReceived" /> @Html.DisplayNameFor(model => model.IsReceived)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+
+    $(document).ready(function () {
+        function calculateValues() {
+            var qty = parseInt($("#Quantity").val());
+            var rate = parseFloat($("#ConvRate").val());
+            var rmb = parseFloat($("#RMBRate").val());
+
+            var rmbAmount = qty * rmb;
+            var pkr = rate * rmb;
+            var pkramount = rate * rmb * qty;
+
+            $("#RMBAmount").val(rmbAmount);
+            $("#PKRAmount").val(pkramount);
+            $("#PKRCost").val(pkr);
+        };
+        calculateValues();
+        $('#Quantity').change(function () {
+            calculateValues();
+        });
+        $('#RMBRate').change(function () {
+            calculateValues();
+        });
+        $('#ConvRate').change(function () {
+            calculateValues();
+        });
+    });
+</script>

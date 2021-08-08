@@ -57,6 +57,18 @@ namespace TestCore.Models
         [HiddenInput(DisplayValue = false)]
         public StockMovementType? MovementType { get; set; }
 
+        /// <summary>
+        /// Not null if created as Good Received for a Purchase Order
+        /// </summary>
+        [HiddenInput(DisplayValue =false)]
+        public long? PurchaseOrderId { get; set; }
+
+        [DisplayName("PO")]
+        public bool GoodReceived
+        {
+            get { return PurchaseOrderId != null; }
+        }
+
         public Product Product { get { return _prodRep.Find(ProductId); } }
 
     }

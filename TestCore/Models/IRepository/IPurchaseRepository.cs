@@ -14,5 +14,6 @@ namespace TestCore.Models.IRepository
         void Remove(long id);
         PurchaseMovement Find(long id);
         IEnumerable GetPurchases();
+        IEnumerable GetPurchases(long purchaseOrderId);
     }
 }

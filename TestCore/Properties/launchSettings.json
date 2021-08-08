@@ -16,7 +16,8 @@
         "DB_NAME": "PastaPackages3",
         "DB_PASSWORD": "1234",
         "DB_SERVER": ".\\sqlexpress",
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DEPLOY": "Local"
       }
     },
     "TestCore": {
