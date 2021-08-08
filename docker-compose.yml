@@ -11,6 +11,7 @@ services:
     - DB_SERVER=db
     - DB_USERNAME=sa
     - DB_PASSWORD=King.1234
+    - DEPLOY=Cloud
     image: inventorylight
     build:
       context: .
