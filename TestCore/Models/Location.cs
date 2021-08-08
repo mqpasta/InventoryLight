@@ -22,5 +22,13 @@ namespace TestCore.Models
         [DisplayName("Location Name")]
         [MaxLength(20, ErrorMessage ="Location name can contain 20 characters.")]
         public string LocationName { get; set; }
+
+        [DisplayName("Wearhouse")]
+        public bool IsWearhouse { get; set; }
+
+        public string Wearhouse
+        {
+            get { return (IsWearhouse) ? "Yes" : "No"; }
+        }
     }
 }

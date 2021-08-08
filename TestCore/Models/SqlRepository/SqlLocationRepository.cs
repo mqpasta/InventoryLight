@@ -16,8 +16,10 @@ namespace TestCore.Models.SqlRepository
             using (SqlConnection _conn = new SqlConnection(DBHelper.ConnectionString))
             {
                 _conn.Open();
-                string query = string.Format("Insert Into Location(LocationCode, LocationName) " +
-                    " values('{0}','{1}');", l.LocationCode, l.LocationName);
+                string query = string.Format("Insert Into Location(LocationCode, LocationName, IsWearhouse) " +
+                    " values('{0}','{1}',{2});",
+                    l.LocationCode, l.LocationName,
+                    Convert.ToInt16(l.IsWearhouse));
 
                 DBHelper.Execute(_conn, query);
                 _conn.Close();
@@ -26,8 +28,12 @@ namespace TestCore.Models.SqlRepository
 
         public void Edit(Location l)
         {
-            string query = string.Format("UPDATE Location SET LocationCode = {0}, LocationName = '{1}' " +
-                " WHERE LocationId = {2}", l.LocationCode, l.LocationName, l.LocationId);
+            string query = string.Format("UPDATE Location SET LocationCode = {0}, LocationName = '{1}', " +
+                " IsWearhouse = {2} " +
+                " WHERE LocationId = {3}",
+                l.LocationCode, l.LocationName,
+                Convert.ToInt16(l.IsWearhouse),
+                l.LocationId);
             using (SqlConnection _con = new SqlConnection(DBHelper.ConnectionString))
             {
                 _con.Open();
@@ -43,21 +49,13 @@ namespace TestCore.Models.SqlRepository
             {
                 _con.Open();
                 DataSet ds = DBHelper.LoadData(_con, query);
+                _con.Close();
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                {
-                    Location found = new Location()
-                    {
-                        LocationId = Convert.ToInt64(ds.Tables[0].Rows[0]["LocationId"]),
-                        LocationCode = Convert.ToInt16(ds.Tables[0].Rows[0]["LocationCode"]),
-                        LocationName = Convert.ToString(ds.Tables[0].Rows[0]["LocationName"])
-                    };
-                    _con.Close();
-                    return found;
-                }
-                _con.Close();
+                    return LoadRow(ds.Tables[0].Rows[0]);
+
             }
-           
+
             return null;
         }
 
@@ -75,13 +73,7 @@ namespace TestCore.Models.SqlRepository
                 {
                     foreach (DataRow r in ds.Tables[0].Rows)
                     {
-                        Location aLocation = new Location()
-                        {
-                            LocationId = Convert.ToInt64(r["LocationId"]),
-                            LocationCode = Convert.ToInt16(r["LocationCode"]),
-                            LocationName = Convert.ToString(r["LocationName"])
-                        };
-                        locations.Add(aLocation);
+                        locations.Add(LoadRow(r));
                     }
                 }
                 _con.Close();
@@ -89,6 +81,17 @@ namespace TestCore.Models.SqlRepository
 
             return locations;
 
+        }
+
+        private static Location LoadRow(DataRow r)
+        {
+            return new Location()
+            {
+                LocationId = Convert.ToInt64(r["LocationId"]),
+                LocationCode = Convert.ToInt16(r["LocationCode"]),
+                LocationName = Convert.ToString(r["LocationName"]),
+                IsWearhouse = Convert.ToBoolean(r["IsWearhouse"])
+            };
         }
 
         public void Remove(long id)
