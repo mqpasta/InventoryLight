@@ -5,6 +5,7 @@ ENV MSSQL_SA_PASSWORD King.1234
 
 copy ./TestCore/Data/ /
 copy ./TestCore/Data/CreateScript.sql /setup.sql
+copy ./TestCore/Data/InsertProducts.sql /InsertProducts.sql
 
 USER root
 RUN chmod +x entrypoint.sh

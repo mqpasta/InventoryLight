@@ -39,8 +39,6 @@ namespace TestCore
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-
-
             // Set connection string values from Enviornment Variabels
             DBHelper.SetConnectionString(Environment.GetEnvironmentVariable("DB_SERVER"),
                         Environment.GetEnvironmentVariable("DB_NAME"),
