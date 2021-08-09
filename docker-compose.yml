@@ -6,7 +6,7 @@ networks:
 services:
   webapp:
     environment:
-    - ASPNETCORE_ENVIRONMENT=Development
+    - ASPNETCORE_ENVIRONMENT=Deployment
     - DB_NAME=PastaPackages
     - DB_SERVER=db
     - DB_USERNAME=sa
