@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestCore.Models;
+using TestCore.Helper;
+using System.Text;
 
 namespace TestCore.Controllers
 {
     public class HomeController : Controller
     {
-        [AllowAnonymous]
+        [AuthRequire]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize]
+        [AuthRequire]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -25,6 +27,7 @@ namespace TestCore.Controllers
             return View();
         }
 
+        [AuthRequire]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -52,12 +55,21 @@ namespace TestCore.Controllers
         [AllowAnonymous]
         public IActionResult LoginUser(User aUser)
         {
-            if(aUser.UserName == "admin" && aUser.Password=="dark.Invent")
+            if (aUser.UserName == "admin" && aUser.Password == "dark.Invent")
             {
+                HttpContext.Session.Set("login", Encoding.ASCII.GetBytes(DateTime.Now.ToString()));
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("Error", "Invalid username and/or password.");
-            return View("Login",aUser);
+            return View("Login", aUser);
+        }
+
+        [AllowAnonymous]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index");
         }
     }
 }
