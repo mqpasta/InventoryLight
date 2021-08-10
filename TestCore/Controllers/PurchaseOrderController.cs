@@ -8,9 +8,11 @@ using TestCore.Models;
 using TestCore.Models.FakeRepository;
 using TestCore.Models.IRepository;
 using TestCore.Models.SqlRepository;
+using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
+    [AuthRequire]
     public class PurchaseOrderController : Controller
     {
         IPurchaseOrderRepository rep = new SqlPurchaseOrderRepository();
