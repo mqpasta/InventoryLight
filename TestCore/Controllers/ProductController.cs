@@ -12,21 +12,24 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    [AuthRequire]
+    
     public class ProductController : Controller
     {
         IProductRepository rep = new SqlProductRepository();
 
+        [AuthRequire]
         public IActionResult Index()
         {
             return View("ShowAll", rep.GetProducts());
         }
 
+        [AuthRequire]
         public IActionResult Create()
         {
             return View();
         }
 
+        [HttpPost]
         public IActionResult CreateProduct(Product p)
         {
             if(ModelState.IsValid)
@@ -39,16 +42,19 @@ namespace TestCore.Controllers
             
         }
 
+        [AuthRequire]
         public IActionResult List()
         {
             return View("ShowAll", rep.GetProducts());
         }
 
+        [AuthRequire]
         public IActionResult ShowAll(List<Product> p)
         {
             return View(p);
         }
 
+        [AuthRequire]
         public IActionResult Edit(long id)
         {
             Product p = rep.Find(id);
@@ -57,6 +63,7 @@ namespace TestCore.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Update(Product p)
         {
             if(ModelState.IsValid)
@@ -68,6 +75,7 @@ namespace TestCore.Controllers
             return View("Edit");
         }
 
+        [AuthRequire]
         public IActionResult Remove(long id)
         {
             rep.Remove(id);

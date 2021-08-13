@@ -12,21 +12,24 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    [AuthRequire]
+    
     public class LocationController : Controller
     {
         ILocationRepository rep = new SqlLocationRepository();
 
+        [AuthRequire]
         public IActionResult Index()
         {
             return View(rep.GetLocations());
         }
 
+        [AuthRequire]
         public IActionResult Create()
         {
             return View();
         }
 
+        [AuthRequire]
         public IActionResult Edit(long id)
         {
             var found = rep.Find(id);
@@ -40,6 +43,7 @@ namespace TestCore.Controllers
             return View("Index", rep.GetLocations());
         }
 
+        [HttpPost]
         public IActionResult Save(Location l)
         {
             if(ModelState.IsValid)
@@ -52,6 +56,7 @@ namespace TestCore.Controllers
             return View("Create");
         }
 
+        [HttpPost]
         public IActionResult Update(Location l)
         {
             if(ModelState.IsValid)
@@ -65,6 +70,7 @@ namespace TestCore.Controllers
 
         }
 
+        [AuthRequire]
         public IActionResult Delete(long id)
         {
             rep.Remove(id);

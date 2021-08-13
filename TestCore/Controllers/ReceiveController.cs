@@ -14,13 +14,13 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    [AuthRequire]
     public class ReceiveController : Controller
     {
         ILocationRepository _locRep = new SqlLocationRepository();
         IPurchaseOrderRepository _ordRep = new SqlPurchaseOrderRepository();
         IPurchaseRepository rep = new SqlPurchaseRepository();
 
+        [AuthRequire]
         public IActionResult Index(long id)
         {
             var found = _ordRep.Find(id);
@@ -45,6 +45,7 @@ namespace TestCore.Controllers
             return View(movement);
         }
 
+        [HttpPost]
         public IActionResult Save(PurchaseMovement movement)
         {
             movement.MovementType = StockMovementType.Purchase;
@@ -58,7 +59,7 @@ namespace TestCore.Controllers
             ViewBag.VBLocationList = _locRep.GetLocations();
         }
 
-        [HttpGet]
+        [AuthRequire]
         public IActionResult Edit(long id)
         {
 
@@ -83,6 +84,7 @@ namespace TestCore.Controllers
             return Content("done");
         }
 
+        [AuthRequire]
         public IActionResult Delete(long id)
         {
             var found = rep.Find(id);

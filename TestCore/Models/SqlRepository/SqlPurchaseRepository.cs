@@ -30,6 +30,10 @@ namespace TestCore.Models.SqlRepository
                 SqlTransaction trans = con.BeginTransaction();
                 try
                 {
+                    object orderId = "null";
+                    if (purchase.PurchaseOrderId != null)
+                        orderId = purchase.PurchaseOrderId.Value;
+
 
                     // Insert row in StockMovement
                     DBHelper.Execute(con, string.Format(query, purchase.Date, purchase.ProductId,
@@ -38,7 +42,7 @@ namespace TestCore.Models.SqlRepository
                                                               purchase.PurchasePrice,
                                                               0, // SalePrice
                                                               Convert.ToInt32(StockMovementType.Purchase),
-                                                              purchase.PurchaseOrderId),
+                                                              orderId),
                                                               trans);
                     // Update StockStatus
                     DBHelper.Execute(con, string.Format(qryStock, purchase.ProductId,
@@ -194,7 +198,7 @@ namespace TestCore.Models.SqlRepository
                 ToLocationId = Convert.ToInt64(r["ToLocationId"]),
                 PurchasePrice = Convert.ToDecimal(r["PurchasePrice"]),
                 Quantity = Convert.ToInt32(r["Qty"]),
-                PurchaseOrderId = Convert.IsDBNull(r["PurchaseOrderId"]) ? 
+                PurchaseOrderId = Convert.IsDBNull(r["PurchaseOrderId"]) ?
                                         nullPurchaseOrderId : Convert.ToInt64(r["PurchaseOrderId"]),
                 MovementType = StockMovementType.Purchase
             };

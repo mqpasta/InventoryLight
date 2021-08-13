@@ -34,7 +34,9 @@ namespace TestCore.Models.SqlRepository
                             "SET ProductCode = {0}, " +
                             "ProductName = '{1}', " +
                             "PurchasePrice = {2}, " +
-                            "SalePrice = {3};";
+                            "SalePrice = {3} " +
+                            " WHERE ProductId = {4};";
+
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 con.Open();
@@ -42,7 +44,8 @@ namespace TestCore.Models.SqlRepository
                                                     p.ProductCode,
                                                     p.ProductName,
                                                     p.PurchasePrice,
-                                                    p.SalePrice));
+                                                    p.SalePrice,
+                                                    p.ProductId));
                 con.Close();
             }
         }
@@ -109,10 +112,10 @@ namespace TestCore.Models.SqlRepository
         public void Remove(long id)
         {
             string query = "DELETE FROM Product WHERE ProductId = {0}";
-            using(SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 con.Open();
-                DBHelper.Execute(con, query);
+                DBHelper.Execute(con, string.Format(query, id));
                 con.Close();
             }
         }

@@ -19,7 +19,7 @@ namespace TestCore.Models
         public Int16 ProductCode { get; set; }
 
         [Required]
-        [MaxLength(20, ErrorMessage = "Product name can contain only 20 characters." )]
+        [MaxLength(50, ErrorMessage = "Product name can contain only 50 characters." )]
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
 
