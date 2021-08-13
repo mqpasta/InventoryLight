@@ -11,13 +11,13 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    [AuthRequire]
     public class TransferController : Controller
     {
         ITransferRepository rep = new SqlTransferRepository();
         IProductRepository _prodRep = new SqlProductRepository();
         ILocationRepository _locRep = new SqlLocationRepository();
 
+        [AuthRequire]
         public IActionResult Index()
         {
             return View(rep.GetTransfers());
@@ -29,12 +29,14 @@ namespace TestCore.Controllers
             ViewBag.VBProductList = _prodRep.GetProducts();
         }
 
+        [AuthRequire]
         public IActionResult Create()
         {
             SetDropDownLists();
             return View();
         }
 
+        [HttpPost]
         public IActionResult Save(SaleMovement movement)
         {
             if(ModelState.IsValid)
@@ -46,6 +48,7 @@ namespace TestCore.Controllers
             return View("Create");
         }
 
+        [AuthRequire]
         public IActionResult Edit(long id)
         {
             var found = rep.Find(id);
@@ -59,6 +62,7 @@ namespace TestCore.Controllers
             return View("Index", rep.GetTransfers());
         }
 
+        [HttpPost]
         public IActionResult Update(SaleMovement movement)
         {
             if (ModelState.IsValid)
@@ -72,6 +76,14 @@ namespace TestCore.Controllers
             }
 
             return View("Create");
+        }
+
+        [AuthRequire]
+        public IActionResult Remove(long id)
+        {
+            rep.Remove(id);
+
+            return View("Index", rep.GetTransfers());
         }
     }
 }

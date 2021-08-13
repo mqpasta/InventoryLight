@@ -12,7 +12,7 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    [AuthRequire]
+    
     public class PurchaseOrderController : Controller
     {
         IPurchaseOrderRepository rep = new SqlPurchaseOrderRepository();
@@ -23,11 +23,13 @@ namespace TestCore.Controllers
             ViewBag.VBProductList = _prodRep.GetProducts();
         }
 
+        [AuthRequire]
         public IActionResult Index()
         {
             return View(rep.GetOrders());
         }
 
+        [AuthRequire]
         public IActionResult Create()
         {
             SetDropDownLists();
@@ -35,6 +37,7 @@ namespace TestCore.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Save(PurchaseOrder po)
         {
             if(ModelState.IsValid)
@@ -46,6 +49,7 @@ namespace TestCore.Controllers
             return View("Create");
         }
 
+        [AuthRequire]
         public IActionResult Edit(long id)
         {
             var found = rep.Find(id);
@@ -59,6 +63,7 @@ namespace TestCore.Controllers
             return View("Index", rep.GetOrders());
         }
 
+        [HttpPost]
         public IActionResult Update(PurchaseOrder po)
         {
             if(ModelState.IsValid)
@@ -70,7 +75,8 @@ namespace TestCore.Controllers
             return View("Edit");
         }
 
-        public IActionResult Delete(long id)
+        [AuthRequire]
+        public IActionResult Remove(long id)
         {
             var found = rep.Find(id);
 

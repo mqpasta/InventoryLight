@@ -12,13 +12,14 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    [AuthRequire]
+    
     public class StockController : Controller
     {
         IStockStatusRepository rep = new SqlStockStatusRepository();
         IProductRepository _prodRep = new SqlProductRepository();
         ILocationRepository _locRep = new SqlLocationRepository();
 
+        [AuthRequire]
         public IActionResult Index()
         {
             SetDropDownLists();
@@ -26,6 +27,7 @@ namespace TestCore.Controllers
             return View(rep.GetAllStatus());
         }
 
+        [AuthRequire]
         public IActionResult Wearhouse()
         {
             return View(rep.GetWearhouseStock());
@@ -37,6 +39,7 @@ namespace TestCore.Controllers
             ViewBag.VBProductList = _prodRep.GetProducts();
         }
 
+        [AuthRequire]
         public IActionResult Search([FromQuery] string LocationId,
                             [FromQuery] string ProductId,
                             [FromQuery] string summarize)
