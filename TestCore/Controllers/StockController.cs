@@ -72,5 +72,15 @@ namespace TestCore.Controllers
             return View("Index", results);
 
         }
+
+        public IActionResult GetBalanceQuantity([FromQuery]long locationId, [FromQuery]long productId)
+        {
+            List<StockStatus> result = rep.GetFor(locationId, productId);
+
+            if (result.Count > 0)
+                return Json(result[0].BalanceQuantity);
+
+            return Json(0);
+        }
     }
 }

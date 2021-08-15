@@ -57,8 +57,11 @@
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.StockMovementId }) |
-                @Html.ActionLink("Delete", "Remove", new { id = item.StockMovementId })
+                @Html.ActionLink("Edit", "Edit", new { id = item.StockMovementId }) |
+                @Html.ActionLink("Delete", "Remove", new { id = item.StockMovementId }) |
+                <a href="http://wa.me//send?text='Gate Pass for **[@item.Product.ProductCodeName]** (Qty=@item.Quantity) From: [@item.FromLocation.LocationName] To:[@item.ToLocation.LocationName]" 
+                   data-action="share/whatsapp/share">WhatsApp</a>
+
             </td>
         </tr>
         }

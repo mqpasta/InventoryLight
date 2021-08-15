@@ -73,7 +73,7 @@ namespace TestCore.Models
         {
             get
             {
-                return Math.Round(RMBRate * Quantity, 2);
+                return Math.Round(RMBRate * Quantity, 4);
             }
         }
 

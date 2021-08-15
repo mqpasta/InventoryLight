@@ -40,6 +40,8 @@ namespace TestCore.Models
         [DisplayName("Transfering From")]
         public long FromLocationId { get; set; }
 
+        [DisplayName("Available Quantity")]
+        public int BalanceQuantity { get; set; }
 
         public Location ToLocation
         {

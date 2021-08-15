@@ -1,0 +1,24 @@
+﻿<script>
+    $(document).ready(function () {
+        function getBalanceQuantity() {
+            var locId = $("#FromLocationId").val();
+            var prodId = $("#ProductId").val();
+            console.log("from location:" + locId + " for product:" + prodId);
+
+            $.getJSON("/Stock/GetBalanceQuantity/?productId=" + prodId + "&locationId=" + locId,
+                function (data) {
+                    console.log(data);
+                    $("#BalanceQuantity").val(data);
+                });
+        };
+        getBalanceQuantity();
+        $("#FromLocationId").change(function () {
+            console.log("change event at FromLocatinoId");
+            getBalanceQuantity();
+        });
+        $("#ProductId").change(function () {
+            console.log("change vent at Quantity");
+            getBalanceQuantity();
+        });
+    });
+</script>

@@ -45,7 +45,8 @@ namespace TestCore.Models.SqlRepository
                     LocationName = Convert.ToString(r["LocationName"]),
                     InQuantity = Convert.ToInt32(r["InQuantity"]),
                     OutQuantity = Convert.ToInt32(r["OutQuantity"]),
-                    BalanceQuantity = Convert.ToInt32(r["BalanceQuantity"])
+                    BalanceQuantity = Convert.ToInt32(r["BalanceQuantity"]),
+                    AvgPrice = Convert.ToDecimal(r["AvgPrice"])
                 });
             }
         }
