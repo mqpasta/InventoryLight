@@ -42,6 +42,11 @@
                 <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="BalanceQuantity" class="control-label"></label>
+                <input asp-for="BalanceQuantity" class="form-control" readonly />
+                <span asp-validation-for="BalanceQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Quantity" class="control-label"></label>
                 <input asp-for="Quantity" class="form-control" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
@@ -64,4 +69,6 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_BalanceQuantityPartial");}
 }
+

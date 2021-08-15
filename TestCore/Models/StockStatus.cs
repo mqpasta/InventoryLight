@@ -24,5 +24,17 @@ namespace TestCore.Models
         [DisplayName("Balance Quantity")]
         public int BalanceQuantity { get; set; }
 
+        [DisplayName("Avg. Price")]
+        public decimal AvgPrice { get; set; }
+
+        [DisplayName("Amount")]
+        public decimal TotalAmount
+        {
+            get
+            {
+                return BalanceQuantity * AvgPrice;
+            }
+        }
+
     }
 }
