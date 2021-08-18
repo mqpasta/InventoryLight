@@ -1,0 +1,65 @@
+﻿@model TestCore.Models.Reports.GoodReceiveReport
+
+@{
+    ViewData["Title"] = "GoodReceive";
+}
+
+<h2>GoodReceive</h2>
+
+<h4>GoodReceiveReport</h4>
+<hr />
+<div>
+    <form asp-action="GoodReceiveFilter">
+        <div class="row">
+            <div class="col-md-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <input asp-for="StartDate" class="form-control" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <input asp-for="EndDate" class="form-control" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="form-group">
+                    <label asp-for="LocationId" class="control-label"></label>
+                    <select asp-for="LocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control"></select>
+                    <span asp-validation-for="LocationId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class="control-label"></label>
+                    <select asp-for="ProductId" asp-items="@(ViewBag.VBProductList)" class="form-control"></select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div>
+    @if (!(Model is null))
+    {
+        @foreach (var item in Model.PurchaseMovements)
+        {
+            <div>Hello</div>
+        }
+    }
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
