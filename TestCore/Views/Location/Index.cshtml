@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TestCore.Models.Location>
+﻿@using TestCore.Helper;
+@model IEnumerable<TestCore.Models.Location>
 
 @{
     ViewData["Title"] = "Location";
@@ -6,7 +7,7 @@
 
 <h2>Locations</h2>
 <p>
-    <a asp-action="Create">Create New</a>
+    @UIHelper.GetButton(Html,"Create New","Create","Location",ButtonType.General)
 </p>
 
 <table class="table" id="LocationList">

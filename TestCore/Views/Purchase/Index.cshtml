@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TestCore.Models.PurchaseMovement>
+﻿@using TestCore.Helper;
+@model IEnumerable<TestCore.Models.PurchaseMovement>
 
 @{
     ViewData["Title"] = "Purchases";
@@ -7,7 +8,7 @@
 <h2>Purchases</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @UIHelper.GetButton(Html, "Create New", "Create", "Purchase", ButtonType.General)
 </p>
 <table class="table" id="PurchaseList">
     <thead>

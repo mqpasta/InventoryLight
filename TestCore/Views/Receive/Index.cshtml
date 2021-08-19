@@ -1,4 +1,4 @@
-﻿
+﻿@using TestCore.Helper;
 @model TestCore.Models.PurchaseMovement
 
 @{
@@ -6,6 +6,10 @@
 }
 
 <h2>Goods Receive</h2>
+<div>
+    @UIHelper.GetButton(Html, "Back to POs", "Index", "PurchaseOrder", ButtonType.General)
+</div>
+<hr />
 
 <h4>Purchase Order</h4>
 <table class="table">
@@ -171,7 +175,7 @@ else
 
 
 <div>
-    <a asp-action="Index" asp-controller="PurchaseOrder">Back to Purchase Orders</a>
+    @UIHelper.GetButton(Html,"Back to POs","Index","PurchaseOrder",ButtonType.General)
 </div>
 
 @section Scripts {

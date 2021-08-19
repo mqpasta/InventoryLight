@@ -1,4 +1,5 @@
-﻿@model TestCore.Models.Location
+﻿@using TestCore.Helper;
+@model TestCore.Models.Location
 
 @{
     ViewData["Title"] = "New Location";
@@ -13,10 +14,10 @@
         <form asp-action="Save">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*<div class="form-group">
-            <label asp-for="LocationId" class="control-label"></label>
-            <input asp-for="LocationId" class="form-control" />
-            <span asp-validation-for="LocationId" class="text-danger"></span>
-        </div>*@
+                    <label asp-for="LocationId" class="control-label"></label>
+                    <input asp-for="LocationId" class="form-control" />
+                    <span asp-validation-for="LocationId" class="text-danger"></span>
+                </div>*@
             <div class="form-group">
                 <label asp-for="LocationCode" class="control-label"></label>
                 <input asp-for="LocationCode" class="form-control" />
@@ -37,13 +38,14 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
+                @UIHelper.GetButton(Html, "Cancel", "Index", "Location", ButtonType.Cancel)
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @UIHelper.GetButton(Html, "Back to List", "Index", "Location", ButtonType.General)
 </div>
 
 @section Scripts {
