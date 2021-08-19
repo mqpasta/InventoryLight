@@ -42,13 +42,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="LocationId" class="control-label"></label>
-                                    <select asp-for="LocationId" asp-items="@(ViewBag.VBLocationList)" class="form-control"></select>
+                                    <select asp-for="LocationId" asp-items="@(ViewBag.VBLocationList)" class="form-control search-list"></select>
                                     <span asp-validation-for="LocationId" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="ProductId" class="control-label"></label>
-                                <select asp-for="ProductId" asp-items="@(ViewBag.VBProductList)" class="form-control"></select>
+                                <select asp-for="ProductId" asp-items="@(ViewBag.VBProductList)" class="form-control search-list"></select>
                                 <span asp-validation-for="ProductId" class="text-danger"></span>
                             </div>
                         </div>
@@ -226,5 +226,6 @@
 <script>
     $(document).ready(function () {
         setTableForReport('#PurchaseOrderReport', -1, 2, 'PurchaseOrderReport');
+        $('.search-list').select2();
     });
 </script>
