@@ -7,16 +7,16 @@ using TestCore.Models.IRepository;
 using TestCore.Models.SqlRepository;
 namespace TestCore.Models.Reports
 {
-    public class GoodReceiveReport
+    public class PurchaseOrderReport
     {
         [DisplayName("Start Date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:dd-MMM-yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MMM-yyyy}")]
         public DateTime? StartDate { get; set; }
 
         [DisplayName("End Date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:dd-MMM-yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MMM-yyyy}")]
         public DateTime? EndDate { get; set; }
 
         [DisplayName("Location")]
@@ -25,6 +25,12 @@ namespace TestCore.Models.Reports
         [DisplayName("Product")]
         public long ProductId { get; set; }
 
-        public List<PurchaseMovement> PurchaseMovements { get; set; }
+        [DisplayName("Received Orders")]
+        public bool IsReceived { get; set; }
+
+        [DisplayName("Orders with Balance Quantity")]
+        public bool IsLessQuantity { get; set; }
+
+        public List<PurchaseOrder> PurchaseOrders { get; set; }
     }
 }

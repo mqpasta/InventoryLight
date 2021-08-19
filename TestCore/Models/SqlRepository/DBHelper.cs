@@ -82,5 +82,29 @@ namespace TestCore.Models.SqlRepository
             SqlCommand cmd = new SqlCommand(query, con, trans);
             cmd.ExecuteNonQuery();
         }
+
+        public static string NullOrValue<T>(Nullable<T> value) where T : struct
+        {
+            string res = "NULL";
+
+            if (value != null)
+            {
+                if (value is Nullable<bool>)
+                {
+                    Nullable<bool> t = (Nullable<bool>)(object)value;
+                    if (t.Value)
+                        return "1";
+                }
+                else if(value is Nullable<DateTime>)
+                {
+                    return "'" + value.ToString() + "'";
+                }
+
+                return value.ToString();
+            }
+
+
+            return res;
+        }
     }
 }

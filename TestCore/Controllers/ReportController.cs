@@ -16,33 +16,41 @@ namespace TestCore.Controllers
     {
         IProductRepository _prodRep = new SqlProductRepository();
         ILocationRepository _locRep = new SqlLocationRepository();
-        IPurchaseRepository rep = new SqlPurchaseRepository();
+        IPurchaseOrderRepository rep = new SqlPurchaseOrderRepository();
 
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult GoodReceive()
+        public IActionResult PurchaseOrder()
         {
 
-            GoodReceiveReport r = new GoodReceiveReport();
-            r.PurchaseMovements = new List<PurchaseMovement>();
-            r.PurchaseMovements.Add(new PurchaseMovement());
-
-            SetDropDownLists(null);
+            PurchaseOrderReport r = new PurchaseOrderReport();
+            SetDropDownLists();
 
             return View(r);
         }
 
-        public IActionResult GoodReceiveFilter(GoodReceiveReport filter)
+        public IActionResult PurchaseOrderReport(PurchaseOrderReport filter)
         {
-            SetDropDownLists(filter.ProductId);
 
-            return View("GoodReceive", filter);
+            filter.PurchaseOrders = rep.Search(
+                filter.StartDate,
+                filter.EndDate,
+                (filter.LocationId > 0) ? (Nullable<long>)filter.LocationId : null,
+                (filter.ProductId > 0) ? (Nullable<long>)filter.ProductId : null,
+                (filter.IsReceived) ? (Nullable<bool>)true:null,
+                (filter.IsLessQuantity)? (Nullable<bool>)true:null
+                );
+
+
+            SetDropDownLists(filter.ProductId, filter.LocationId);
+
+            return View("PurchaseOrder", filter);
         }
 
-        private void SetDropDownLists(long? selectedProduct)
+        private void SetDropDownLists(long? selectedProduct = null, long? locationId = null)
         {
 
             List<Location> locs = _locRep.GetLocations();
@@ -61,7 +69,7 @@ namespace TestCore.Controllers
                 ProductName = "All"
             });
 
-
+            ViewBag.VBLocationlist = new SelectList(ViewBag.VBLocationList, "LocationId", "LocationName", locationId);
             ViewBag.VBProductList = new SelectList(prods, "ProductId", "ProductCodeName", selectedProduct);
         }
     }

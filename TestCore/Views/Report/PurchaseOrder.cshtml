@@ -1,0 +1,230 @@
+﻿@model TestCore.Models.Reports.PurchaseOrderReport
+
+@{
+    ViewData["Title"] = "Report (Purchase Orders)";
+}
+
+<h2>Purchase Order Report</h2>
+
+<hr />
+
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" href="#reportFilter">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Report Filter
+                </a>
+            </h4>
+        </div>
+        <div id="reportFilter" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div id="reportForm">
+                    <form asp-action="PurchaseOrderReport">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="StartDate" class="control-label"></label>
+                                    <input asp-for="StartDate" class="form-control" />
+                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="EndDate" class="control-label"></label>
+                                    <input asp-for="EndDate" class="form-control" />
+                                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="LocationId" class="control-label"></label>
+                                    <select asp-for="LocationId" asp-items="@(ViewBag.VBLocationList)" class="form-control"></select>
+                                    <span asp-validation-for="LocationId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="ProductId" class="control-label"></label>
+                                <select asp-for="ProductId" asp-items="@(ViewBag.VBProductList)" class="form-control"></select>
+                                <span asp-validation-for="ProductId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsReceived">
+                                    <label class="form-check-label" asp-for="IsReceived"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsLessQuantity">
+                                    <label class="form-check-label" asp-for="IsLessQuantity"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="submit" value="Generate" class="btn btn-info" />
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="reset" value="Clear" class="btn btn-danger" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" href="#resultSearch">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Result
+                </a>
+            </h4>
+        </div>
+        <div id="resultSearch" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div>
+                    @if (!(Model is null) && !(Model.PurchaseOrders is null)
+          && (Model.PurchaseOrders.Count > 0))
+                    {
+                        @if (Model.PurchaseOrders.Count > 0)
+                        {
+                            <table class="table" id="PurchaseOrderReport">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].PurchaseOrderId)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].PODate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].ProductId)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].ConvRate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].RMBRate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].PKRCost)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].PKRAmount)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].RMBAmount)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].Quantity)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].ReceivedQuantity)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PurchaseOrders[0].BalanceQuantity)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.IsReceived)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.PurchaseOrders)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PurchaseOrderId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PODate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ConvRate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RMBRate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PKRCost)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PKRAmount)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RMBAmount)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Quantity)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ReceivedQuantity)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BalanceQuantity)
+                                            </td>
+                                            <td>
+                                                @if (item.IsReceived)
+                                                {<span>Yes</span>}
+                                                else
+                                                { <span>No</span>}
+                                                @*@Html.DisplayFor(modelItem => item.IsReceived)*@
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Detail", "Index", "Receive", new { id = item.PurchaseOrderId })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="12">&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        }
+                    }
+                    else
+                    {
+                        <div>No rows returned.</div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    $(document).ready(function () {
+        setTableForReport('#PurchaseOrderReport', -1, 2, 'PurchaseOrderReport');
+    });
+</script>
