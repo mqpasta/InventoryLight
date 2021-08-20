@@ -8,6 +8,7 @@ using TestCore.Models.IRepository;
 using TestCore.Models.SqlRepository;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace TestCore.Models.SqlRepository
 {
@@ -25,9 +26,11 @@ namespace TestCore.Models.SqlRepository
                                     " ConvRate = {2}, " +
                                     " RMBRate = {3}, " +
                                     " Quantity = {4}, " +
-                                    " IsReceived = {5}";
+                                    " IsReceived = {5} " +
+                                    " WHERE PurchaseOrderId = {6}";
         readonly string qryCountReceviedLiens = "SELECT count(1) FROM StockMovement WHERE PurchaseOrderId = {0}";
         readonly string qryDeletePO = "DELETE FROM PurchaseOrder WHERE PurchaseOrderId = {0}";
+
         #endregion
 
         public void Add(PurchaseOrder purchaseOrder)
@@ -57,7 +60,8 @@ namespace TestCore.Models.SqlRepository
                                     purchaseOrder.ConvRate,
                                     purchaseOrder.RMBRate,
                                     purchaseOrder.Quantity,
-                                    Convert.ToInt16(purchaseOrder.IsReceived)));
+                                    Convert.ToInt16(purchaseOrder.IsReceived),
+                                    purchaseOrder.PurchaseOrderId));
                 con.Close();
             }
         }
@@ -104,21 +108,65 @@ namespace TestCore.Models.SqlRepository
                 {
                     foreach (DataRow r in ds.Tables[0].Rows)
                     {
-                        orders.Add(new PurchaseOrder()
-                        {
-                            PurchaseOrderId = Convert.ToInt64(r["PurchaseOrderId"]),
-                            PODate = Convert.ToDateTime(r["PODate"]),
-                            ProductId = Convert.ToInt64(r["ProductId"]),
-                            ConvRate = Convert.ToDecimal(r["ConvRate"]),
-                            RMBRate = Convert.ToDecimal(r["RMBRate"]),
-                            Quantity = Convert.ToInt32(r["Quantity"]),
-                            IsReceived = Convert.ToBoolean(r["IsReceived"]),
-                            ReceivedQuantity = Convert.ToInt32(r["ReceivedQuantity"])
-                        });
+                        orders.Add(LoadRow(r));
                     }
                 }
                 con.Close();
             }
+            return orders;
+        }
+
+        private PurchaseOrder LoadRow(DataRow r)
+        {
+            return new PurchaseOrder()
+            {
+                PurchaseOrderId = Convert.ToInt64(r["PurchaseOrderId"]),
+                PODate = Convert.ToDateTime(r["PODate"]),
+                ProductId = Convert.ToInt64(r["ProductId"]),
+                ConvRate = Convert.ToDecimal(r["ConvRate"]),
+                RMBRate = Convert.ToDecimal(r["RMBRate"]),
+                Quantity = Convert.ToInt32(r["Quantity"]),
+                IsReceived = Convert.ToBoolean(r["IsReceived"]),
+                ReceivedQuantity = Convert.ToInt32(r["ReceivedQuantity"])
+            };
+        }
+
+        public List<PurchaseOrder> Search(DateTime? startDate, DateTime? endDate,
+                                    long? locationId, long? productId, bool? isReceived,
+                                    bool? isBalanceQuantity)
+        {
+
+            string qrySearch = $"select VPO.*, SM.FromLocationId as LocationId " +
+                " from ViewPurchaseOrders VPO " +
+            "Left Join StockMovement SM ON VPO.PurchaseOrderId = SM.PurchaseOrderId " +
+            " WHERE({0} IS NULL OR SM.ToLocationId = {0}) " +
+            " AND({1} IS NULL OR VPO.ProductId = {1}) " +
+            " AND({2} IS NULL OR VPO.PODate >= {2}) " +
+            " AND({3} IS NULL OR VPO.PODate <= {3}) " +
+            " AND({4} IS NULL OR VPO.IsReceived = {4}) " +
+            " AND({5} IS NULL OR (VPO.Quantity - VPO.ReceivedQuantity)>0)";
+
+            List<PurchaseOrder> orders = new List<PurchaseOrder>();
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            {
+                DataSet ds = DBHelper.LoadData(con,
+                                string.Format(qrySearch,
+                                        DBHelper.NullOrValue<long>(locationId),
+                                        DBHelper.NullOrValue<long>(productId),
+                                        DBHelper.NullOrValue<DateTime>(startDate),
+                                        DBHelper.NullOrValue<DateTime>(endDate),
+                                        DBHelper.NullOrValue<bool>(isReceived),
+                                        DBHelper.NullOrValue<bool>(isBalanceQuantity))
+                                        );
+                if (ds.Tables.Count > 0)
+                {
+                    foreach (DataRow r in ds.Tables[0].Rows)
+                    {
+                        orders.Add(LoadRow(r));
+                    }
+                }
+            }
+
             return orders;
         }
 

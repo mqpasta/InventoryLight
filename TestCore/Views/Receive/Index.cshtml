@@ -1,4 +1,4 @@
-﻿
+﻿@using TestCore.Helper;
 @model TestCore.Models.PurchaseMovement
 
 @{
@@ -6,6 +6,10 @@
 }
 
 <h2>Goods Receive</h2>
+<div>
+    @UIHelper.GetButton(Html, "Back to POs", "Index", "PurchaseOrder", ButtonType.General)
+</div>
+<hr />
 
 <h4>Purchase Order</h4>
 <table class="table">
@@ -75,7 +79,7 @@
                 </div>
                 <div class="form-group col-xs-3">
                     <label asp-for="ToLocationId" class="control-label"></label>
-                    <select asp-for="ToLocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control"></select>
+                    <select asp-for="ToLocationId" asp-items="@(new SelectList(ViewBag.VBLocationList,"LocationId","LocationName"))" class="form-control search-list"></select>
                     <span asp-validation-for="ToLocationId" class="text-danger"></span>
                 </div>
                 <div class="form-group col-xs-3">
@@ -171,9 +175,17 @@ else
 
 
 <div>
-    <a asp-action="Index" asp-controller="PurchaseOrder">Back to Purchase Orders</a>
+    @UIHelper.GetButton(Html,"Back to POs","Index","PurchaseOrder",ButtonType.General)
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('.search-list').select2();
+        });
+    </script>
 }
+
+

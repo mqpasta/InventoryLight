@@ -14,5 +14,9 @@ namespace TestCore.Models.IRepository
         List<StockStatus> GetForProduct(long productId, bool isSummarize = false);
         List<StockStatus> GetFor(long locationId, long productId, bool isSummarize = false);
         List<StockStatus> GetWearhouseStock();
+
+        DataTable Search(DateTime? startDate, DateTime? endDate, long? locationId,
+                            long? productId, StockMovementType? type);
     }
+
 }

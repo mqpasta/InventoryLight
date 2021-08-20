@@ -29,7 +29,7 @@ namespace TestCore.Models
 
         private void Initialize()
         {
-            this.MovementType = StockMovementType.Sale;
+            this.MovementType = StockMovementType.Transfer;
         }
         
         [Required]

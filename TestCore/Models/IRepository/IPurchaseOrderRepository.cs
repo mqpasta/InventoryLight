@@ -14,6 +14,9 @@ namespace TestCore.Models.IRepository
         void Remove(long id);
         PurchaseOrder Find(long id);
         List<PurchaseOrder> GetOrders();
+        List<PurchaseOrder> Search(DateTime? startDate, DateTime? endDate,
+                                    long? locationId, long? productId,
+                                    bool? isReceived, bool? isBalanceQuantity);
         int TotalReceived(long id);
     }
 }

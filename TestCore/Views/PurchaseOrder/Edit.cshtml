@@ -1,4 +1,5 @@
-﻿@model TestCore.Models.PurchaseOrder
+﻿@using TestCore.Helper;
+@model TestCore.Models.PurchaseOrder
 
 @{
     ViewData["Title"] = "Purchase Orders";
@@ -24,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProductId" class="control-label"></label>
-                <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductCodeName"))" class="form-control"></select>
+                <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.VBProductList,"ProductId","ProductCodeName"))" class="form-control search-list"></select>
                 <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -92,6 +93,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
+                @UIHelper.GetButton(Html, "Cancel", "Index", "Purchase", ButtonType.Cancel)
             </div>
         </form>
     </div>
@@ -131,5 +133,6 @@
         $('#ConvRate').change(function () {
             calculateValues();
         });
+        $('.search-list').select2();
     });
 </script>

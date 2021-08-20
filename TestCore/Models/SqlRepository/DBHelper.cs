@@ -82,5 +82,39 @@ namespace TestCore.Models.SqlRepository
             SqlCommand cmd = new SqlCommand(query, con, trans);
             cmd.ExecuteNonQuery();
         }
+
+        public static string NullOrValue<T>(Nullable<T> value) where T : struct
+        {
+            string res = "NULL";
+
+            if (value != null)
+            {
+                if (value is Nullable<bool>)
+                {
+                    Nullable<bool> t = (Nullable<bool>)(object)value;
+                    if (t.Value)
+                        return "1";
+                }
+                else if (value is Nullable<DateTime>)
+                {
+                    return "'" + value.ToString() + "'";
+                }
+                else if (value is Nullable<StockMovementType>)
+                {
+                    Nullable<StockMovementType> t = (Nullable<StockMovementType>)(object)value;
+                    if (t.Value == StockMovementType.All)
+                        return res;
+                    else if (t.Value == StockMovementType.NotOpeningStock)
+                        return "0,1";
+                    else
+                        return Convert.ToInt32((t.Value)).ToString();
+                }
+
+                return value.ToString();
+            }
+
+
+            return res;
+        }
     }
 }

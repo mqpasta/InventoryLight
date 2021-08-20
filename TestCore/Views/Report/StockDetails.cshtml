@@ -1,0 +1,224 @@
+﻿@model TestCore.Models.Reports.StockDetailReport
+
+@{
+    ViewData["Title"] = "Repot (Stock Details)";
+}
+
+<h2>Stock Details Report</h2>
+<hr />
+
+<div class="panel-group" id="accordion">
+    <!-- Filter Panel -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" href="#reportFilter">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Report Filter
+                </a>
+            </h4>
+        </div>
+        <div id="reportFilter" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div id="reportForm">
+                    <form asp-action="GenerateStockDetails">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="StartDate" class="control-label"></label>
+                                    <input asp-for="StartDate" class="form-control" />
+                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="EndDate" class="control-label"></label>
+                                    <input asp-for="EndDate" class="form-control" />
+                                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="LocationId" class="control-label"></label>
+                                    <select asp-for="LocationId" asp-items="@(ViewBag.VBLocationList)" class="form-control search-list"></select>
+                                    <span asp-validation-for="LocationId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="ProductId" class="control-label"></label>
+                                <select asp-for="ProductId" asp-items="@(ViewBag.VBProductList)" class="form-control search-list"></select>
+                                <span asp-validation-for="ProductId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label asp-for="Type" class="control-label"></label>
+                                <select asp-for="Type" asp-items="Html.GetEnumSelectList<StockMovementType>().OrderBy(x => x.Text)" class="form-control search-list"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="submit" value="Generate" class="btn btn-info" />
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="reset" value="Clear" class="btn btn-danger" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Result Panel -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" href="#resultSearch">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Result
+                </a>
+            </h4>
+        </div>
+        <div id="resultSearch" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div>
+                    @if (!(Model is null) && !(Model.Result is null)
+&& (Model.Result.Rows.Count > 0))
+                    {
+
+                        <table class="table" id="StockDetailsReport">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Location
+                                    </th>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        In Quantity
+                                    </th>
+                                    <th>
+                                        Out Quantity
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (System.Data.DataRow item in Model.Result.Rows)
+                                {
+                                    var date = Convert.ToDateTime(item["Date"]).ToShortDateString();
+                                    string pname = Convert.ToString(item["ProductName"]);
+                                    var frm = item["FromLocationName"];
+                                    var to = item["ToLocationName"];
+                                    var t = (StockMovementType)Convert.ToInt16(item["StockMovementType"]);
+                                    int inQty = Convert.ToInt32(item["InQty"]);
+                                    int outQty = Convert.ToInt32(item["OutQty"]);
+                                    var poID = item["PurchaseOrderId"];
+                                    <tr>
+                                        <td>
+                                            @date
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (pname.Length > 25)
+                                                {
+                                                    <span>@pname.Substring(0, 25)...</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@pname</span>
+                                                }
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @{
+
+                                                if (!DBNull.Value.Equals(frm))
+                                                {
+                                                    if (inQty > 0)
+                                                    {
+                                                        <span>@to (from: @frm)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@frm (to: @to)</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>@to</span>
+                                                }
+
+                                                if (t == StockMovementType.Purchase && !DBNull.Value.Equals(poID))
+                                                {
+                                                    @Html.ActionLink("(PO: " + poID + ")", "Index", "Receive", new { id = poID })
+
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @{
+
+                                                <span>@Enum.GetName(typeof(StockMovementType), t)</span>
+
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @item["InQty"]
+                                        </td>
+                                        <td>
+                                            @item["OutQty"]
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                    <tr>
+                                        <th colspan="5">&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </tfoot>
+                        </table>
+
+                    }
+                    else
+                    {
+                        <div>No rows returned.</div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            setTableForReport('#StockDetailsReport', -1, 2, 'StockDetailsReport');
+            $('.search-list').select2();
+        });
+    </script>
+}

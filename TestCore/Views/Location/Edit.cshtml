@@ -1,4 +1,5 @@
-﻿@model TestCore.Models.Location
+﻿@using TestCore.Helper;
+@model TestCore.Models.Location
 
 @{
     ViewData["Title"] = "Edit Location";
@@ -34,13 +35,14 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
+                @UIHelper.GetButton(Html, "Cancel", "Index", "Location", ButtonType.Cancel)
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @UIHelper.GetButton(Html, "Back to List", "Index", "Location", ButtonType.General)
 </div>
 
 @section Scripts {
