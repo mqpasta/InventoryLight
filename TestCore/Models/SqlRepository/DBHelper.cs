@@ -95,9 +95,19 @@ namespace TestCore.Models.SqlRepository
                     if (t.Value)
                         return "1";
                 }
-                else if(value is Nullable<DateTime>)
+                else if (value is Nullable<DateTime>)
                 {
                     return "'" + value.ToString() + "'";
+                }
+                else if (value is Nullable<StockMovementType>)
+                {
+                    Nullable<StockMovementType> t = (Nullable<StockMovementType>)(object)value;
+                    if (t.Value == StockMovementType.All)
+                        return res;
+                    else if (t.Value == StockMovementType.NotOpeningStock)
+                        return "0,1";
+                    else
+                        return Convert.ToInt32((t.Value)).ToString();
                 }
 
                 return value.ToString();

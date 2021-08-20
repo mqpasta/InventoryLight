@@ -17,8 +17,10 @@ namespace TestCore.Models
     public enum StockMovementType
     {
         Purchase,
-        Sale,
-        OpeningStock
+        Transfer,
+        OpeningStock,
+        All,
+        NotOpeningStock
     }
 
     public abstract class StockMovement

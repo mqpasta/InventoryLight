@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Views\NoUse\" />
   </ItemGroup>
 
   <ItemGroup>

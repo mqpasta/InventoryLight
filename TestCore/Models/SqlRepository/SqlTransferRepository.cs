@@ -43,7 +43,7 @@ namespace TestCore.Models.SqlRepository
                                                               transer.Quantity,
                                                               0, // PurchasePrice
                                                               0, // SalePrice
-                                                              Convert.ToInt32(StockMovementType.Sale)),
+                                                              Convert.ToInt32(StockMovementType.Transfer)),
                                                               trans);
                     // Update StockStatus from Target Location (add in purchase)
                     DBHelper.Execute(con, string.Format(qryStockUp, transer.ProductId,
@@ -166,7 +166,7 @@ namespace TestCore.Models.SqlRepository
                         ToLocationId = Convert.ToInt64(r["ToLocationId"]),
                         ProductId = Convert.ToInt64(r["ProductId"]),
                         Quantity = Convert.ToInt32(r["Qty"]),
-                        MovementType = StockMovementType.Sale
+                        MovementType = StockMovementType.Transfer
                     };
                     con.Close();
                     return movement;
@@ -186,7 +186,7 @@ namespace TestCore.Models.SqlRepository
             {
                 con.Open();
                 DataSet ds = DBHelper.LoadData(con,
-                                string.Format(query, Convert.ToInt32(StockMovementType.Sale)));
+                                string.Format(query, Convert.ToInt32(StockMovementType.Transfer)));
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
@@ -200,7 +200,7 @@ namespace TestCore.Models.SqlRepository
                             ToLocationId = Convert.ToInt64(r["ToLocationId"]),
                             ProductId = Convert.ToInt64(r["ProductId"]),
                             Quantity = Convert.ToInt32(r["Qty"]),
-                            MovementType = StockMovementType.Sale
+                            MovementType = StockMovementType.Transfer
                         });
                     }
                 }

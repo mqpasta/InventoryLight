@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using TestCore.Models.IRepository;
-using TestCore.Models.SqlRepository;
+
 namespace TestCore.Models.Reports
 {
-    public class PurchaseOrderReport
+    public class StockDetailReport
     {
         [DisplayName("Start Date")]
         [DataType(DataType.Date)]
@@ -25,12 +24,11 @@ namespace TestCore.Models.Reports
         [DisplayName("Product")]
         public long ProductId { get; set; }
 
-        [DisplayName("Received Orders")]
-        public bool IsReceived { get; set; }
+        [DisplayName("Transaction Type")]
+        public StockMovementType Type { get; set; }
 
-        [DisplayName("Orders with Balance Quantity")]
-        public bool IsLessQuantity { get; set; }
+        public DataTable Result { get; set; }
 
-        public List<PurchaseOrder> PurchaseOrders { get; set; }
+
     }
 }

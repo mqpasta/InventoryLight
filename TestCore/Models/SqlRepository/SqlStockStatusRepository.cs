@@ -17,8 +17,8 @@ namespace TestCore.Models.SqlRepository
             List<StockStatus> stockStatuses = new List<StockStatus>();
 
             string query = "Select * from StockStatusView";
-            
-                
+
+
 
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
@@ -73,7 +73,7 @@ namespace TestCore.Models.SqlRepository
             return stockStatuses;
         }
 
-        public List<StockStatus> GetForLocation(long locationId, bool isSummarize=false)
+        public List<StockStatus> GetForLocation(long locationId, bool isSummarize = false)
         {
             List<StockStatus> stockStatuses = new List<StockStatus>();
             string query = "Select * from StockStatusView " +
@@ -94,7 +94,7 @@ namespace TestCore.Models.SqlRepository
             return stockStatuses;
         }
 
-        public List<StockStatus> GetForProduct(long productId, bool isSummarize=false)
+        public List<StockStatus> GetForProduct(long productId, bool isSummarize = false)
         {
             List<StockStatus> stockStatuses = new List<StockStatus>();
             string query = "Select * from StockStatusView " +
@@ -124,9 +124,9 @@ namespace TestCore.Models.SqlRepository
             {
                 con.Open();
                 DataSet ds = DBHelper.LoadData(con, query);
-                if(ds.Tables.Count>0)
+                if (ds.Tables.Count > 0)
                 {
-                    foreach(DataRow r in ds.Tables[0].Rows)
+                    foreach (DataRow r in ds.Tables[0].Rows)
                     {
                         statuses.Add(new StockStatus()
                         {
@@ -138,6 +138,48 @@ namespace TestCore.Models.SqlRepository
             }
 
             return statuses;
+        }
+
+        public DataTable Search(DateTime? startDate, DateTime? endDate, long? locationId,
+                                    long? productId, StockMovementType? type)
+        {
+            string qrySearch = "with CTE_Stock AS(" +
+                "Select Date, FromLocationId, ToLocationId, ProductId, Qty as InQty, 0 AS OutQty, 'Opening' AS Detail, StockMovementType " +
+                " ,PurchaseOrderId from StockMovement WHERE StockMovementType = 2 AND ({0} " +
+                " IS NULL OR ToLocationId = {0}) AND ({1} IS NULL OR ProductId = {1}) " +
+                " UNION ALL " +
+                " Select Date, FromLocationId, ToLocationId, ProductId, Qty as InQty, 0 AS OutQty, 'In' AS Detail, StockMovementType " +
+                " ,PurchaseOrderId from StockMovement WHERE StockMovementType IN (0,1) AND ({0} IS NULL OR ToLocationId = {0}) " +
+                " AND({1} IS NULL OR ProductId = {1}) " +
+                " UNION ALL " +
+                " Select Date, FromLocationId, ToLocationId, ProductId, 0 as InQty, Qty AS OutQty, 'Out' AS Detail, StockMovementType " +
+                " ,PurchaseOrderId from StockMovement " +
+                " WHERE StockMovementType IN (0,1) AND ({0} IS NULL OR FromLocationId = {0}) " +
+                " AND ({1} IS NULL OR ProductId = {1})) " +
+                " Select S.* , L1.LocationName as FromLocationName, L2.LocationName as ToLocationName, P.ProductName from CTE_Stock S " +
+                " Left Join Location L1 ON S.FromLocationId = L1.LocationId " +
+                " Left Join Location L2 ON S.ToLocationId = L2.LocationId " +
+                " Inner Join Product P ON S.ProductId = P.ProductId " +
+                " WHERE({2} IS NULL OR S.StockMovementType IN ({3})) " +
+                " AND ({4} IS NULL OR S.Date >= {4} ) " +
+                " AND ({5} IS NULL OR S.Date <= {5} )";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            {
+                string stockmvtVal = DBHelper.NullOrValue<StockMovementType>(type);
+
+                DataSet ds = DBHelper.LoadData(con, string.Format(qrySearch,
+                                                        DBHelper.NullOrValue<long>(locationId),
+                                                        DBHelper.NullOrValue<long>(productId),
+                                                        (stockmvtVal == "NULL") ? "NULL" : "NOT NULL",
+                                                        stockmvtVal,
+                                                        DBHelper.NullOrValue<DateTime>(startDate),
+                                                        DBHelper.NullOrValue<DateTime>(endDate)
+                                                        ));
+
+                return ds.Tables[0];
+            }
+
         }
     }
 }
