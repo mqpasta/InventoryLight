@@ -30,7 +30,7 @@ namespace TestCore.Models
         public decimal PurchasePrice { get; set; }
 
         [DefaultValue(0.0)]
-        [DisplayName("Sale Price")]
+        [DisplayName("Cost Price")]
         public decimal SalePrice { get; set; }
 
         public string ProductCodeName

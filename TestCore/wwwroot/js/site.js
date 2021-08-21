@@ -117,6 +117,7 @@ function calculatePurchaseOrderValues() {
     var rate = parseFloatNan($("#ConvRate").val());
     var rmb = parseFloatNan($("#RMBRate").val());
     var rcvd = parseIntNan($("#ReceivedQuantity").val());
+    var cost = parseFloatNan($("#CostPrice").val());
 
     var bal = qty - rcvd;
     var rmbAmount = qty * rmb;
@@ -131,4 +132,5 @@ function calculatePurchaseOrderValues() {
     $("#PKRAmount").val(pkramount);
     $("#PKRCost").val(pkr);
     $("#BalanceQuantity").val(bal);
+    $("#CostPrice").val(cost);
 };
