@@ -12,7 +12,7 @@ using TestCore.Helper;
 
 namespace TestCore.Controllers
 {
-    
+
     public class PurchaseOrderController : Controller
     {
         IPurchaseOrderRepository rep = new SqlPurchaseOrderRepository();
@@ -40,13 +40,22 @@ namespace TestCore.Controllers
         [HttpPost]
         public IActionResult Save(PurchaseOrder po)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                rep.Add(po);
-                return View("Index", rep.GetOrders());
-            }
+                if (po.IsReceived && po.BalanceQuantity > 0)
+                {
+                    ModelState.AddModelError(nameof(PurchaseOrder.IsReceived),
+                        "Order cannot be received with balance quantity.");
+                }
+                else
+                {
+                    rep.Add(po);
+                    return View("Index", rep.GetOrders());
+                }
 
-            return View("Create");
+            }
+            SetDropDownLists();
+            return View("Create", po);
         }
 
         [AuthRequire]
@@ -54,7 +63,7 @@ namespace TestCore.Controllers
         {
             var found = rep.Find(id);
 
-            if(found != null)
+            if (found != null)
             {
                 SetDropDownLists();
                 return View(found);
@@ -66,13 +75,22 @@ namespace TestCore.Controllers
         [HttpPost]
         public IActionResult Update(PurchaseOrder po)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                rep.Edit(po);
-                return View("Index", rep.GetOrders());
+                if (po.IsReceived && po.BalanceQuantity > 0)
+                {
+                    ModelState.AddModelError(nameof(PurchaseOrder.IsReceived),
+                        "Order cannot be received with balance quantity.");
+                }
+                else
+                {
+                    rep.Edit(po);
+                    return View("Index", rep.GetOrders());
+                }
             }
 
-            return View("Edit");
+            SetDropDownLists();
+            return View("Edit",po);
         }
 
         [AuthRequire]
@@ -80,14 +98,14 @@ namespace TestCore.Controllers
         {
             var found = rep.Find(id);
 
-            if(found != null)
+            if (found != null)
             {
                 try
                 {
                     rep.Remove(id);
                     return View("Index", rep.GetOrders());
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     return ShowError(e.Message);
                 }

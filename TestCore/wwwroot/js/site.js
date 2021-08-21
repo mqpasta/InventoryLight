@@ -3,6 +3,25 @@
 
 // Write your JavaScript code.
 
+function parseIntNan(val) {
+    var parsVal = parseInt(val);
+
+    if (isNaN(parsVal))
+        return 0;
+
+    return parsVal;
+};
+
+function parseFloatNan(val) {
+    var parsVal = parseFloat(val);
+
+    if (isNaN(parsVal))
+        return 0;
+
+    return parsVal;
+}
+
+
 $(function () {
     var holder = $('#ModalPlaceHolder');
     $('button[data-toggle="ajax-modal"]').click(function (event) {
@@ -93,3 +112,23 @@ function setTableForReport(tableId, columnIndex, roundFactor, fileName) {
         }
     });
 }
+function calculatePurchaseOrderValues() {
+    var qty = parseIntNan($("#Quantity").val());
+    var rate = parseFloatNan($("#ConvRate").val());
+    var rmb = parseFloatNan($("#RMBRate").val());
+    var rcvd = parseIntNan($("#ReceivedQuantity").val());
+
+    var bal = qty - rcvd;
+    var rmbAmount = qty * rmb;
+    var pkr = rate * rmb;
+    var pkramount = rate * rmb * qty;
+
+    $("#Quantity").val(qty);
+    $("#ConvRate").val(rate);
+    $("#RMBRate").val(rmb);
+    $("#ReceivedQuantity").val(rcvd);
+    $("#RMBAmount").val(rmbAmount);
+    $("#PKRAmount").val(pkramount);
+    $("#PKRCost").val(pkr);
+    $("#BalanceQuantity").val(bal);
+};

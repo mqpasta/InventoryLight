@@ -27,7 +27,7 @@ namespace TestCore.Models
             this.Initialize();
         }
 
-        public PurchaseMovement(ILocationRepository locationRepository, 
+        public PurchaseMovement(ILocationRepository locationRepository,
                                 IProductRepository productRepository)
         {
             _locRep = locationRepository;
@@ -67,6 +67,28 @@ namespace TestCore.Models
             this.MovementType = from.MovementType;
         }
 
+        public static bool Equals (PurchaseMovement lhs, PurchaseMovement rhs)
+        {
+            if (lhs == null && rhs == null)
+                return true;
+            if (lhs == null || rhs == null)
+                return false;
+            if (lhs.ProductId != rhs.ProductId)
+                return false;
+            if (lhs.ToLocationId != rhs.ToLocationId)
+                return false;
+            if (lhs.Date != rhs.Date)
+                return false;
+            if (lhs.MovementType != rhs.MovementType)
+                return false;
+            if (lhs.PurchasePrice != rhs.PurchasePrice)
+                return false;
+            if (lhs.Quantity != rhs.Quantity)
+                return false;
+
+            return true;
+
+        }
 
     }
 }

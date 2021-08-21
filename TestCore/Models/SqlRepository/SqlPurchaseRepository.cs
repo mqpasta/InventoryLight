@@ -12,17 +12,22 @@ namespace TestCore.Models.SqlRepository
 {
     public class SqlPurchaseRepository : IPurchaseRepository
     {
+        string query = "Insert Into StockMovement(Date, ProductId," +
+                                       "ToLocationId, Qty, PurchasePrice, SalePrice, StockMovementType," +
+                                       "PurchaseOrderId) " +
+                               "Values('{0}',{1},{2},{3},{4},{5},{6},{7});";
+
+        string qryStock = "IF NOT EXISTS(select 1 from StockStatus " +
+            "where ProductId = {0} and LocationId={1}) " +
+            "INSERT StockStatus(ProductId, LocationId) VALUES({0}, {1}); " +
+            "UPDATE StockStatus SET PurchaseQty += {2} WHERE ProductId = {0} AND LocationId = {1}";
+        string qryCurrAvgPrice = "SELECT AvgPrice FROM Product where ProductId = {0}";
+        string qryCurrStck = "SELECT sum(purchaseqty) FROM StockStatus WHERE ProductId = {0}";
+        string qryUpdateAvgPrice = "Update Product SET AvgPrice = {0} WHERE ProductId = {1}";
+
         public void Add(PurchaseMovement purchase)
         {
-            string query = "Insert Into StockMovement(Date, ProductId," +
-                                        "ToLocationId, Qty, PurchasePrice, SalePrice, StockMovementType," +
-                                        "PurchaseOrderId) " +
-                                "Values('{0}',{1},{2},{3},{4},{5},{6},{7});";
 
-            string qryStock = "IF NOT EXISTS(select 1 from StockStatus " +
-                "where ProductId = {0} and LocationId={1}) " +
-                "INSERT StockStatus(ProductId, LocationId) VALUES({0}, {1}); " +
-                "UPDATE StockStatus SET PurchaseQty += {2} WHERE ProductId = {0} AND LocationId = {1}";
 
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
@@ -30,25 +35,7 @@ namespace TestCore.Models.SqlRepository
                 SqlTransaction trans = con.BeginTransaction();
                 try
                 {
-                    object orderId = "null";
-                    if (purchase.PurchaseOrderId != null)
-                        orderId = purchase.PurchaseOrderId.Value;
-
-
-                    // Insert row in StockMovement
-                    DBHelper.Execute(con, string.Format(query, purchase.Date, purchase.ProductId,
-                                                              purchase.ToLocationId,
-                                                              purchase.Quantity,
-                                                              purchase.PurchasePrice,
-                                                              0, // SalePrice
-                                                              Convert.ToInt32(StockMovementType.Purchase),
-                                                              orderId),
-                                                              trans);
-                    // Update StockStatus
-                    DBHelper.Execute(con, string.Format(qryStock, purchase.ProductId,
-                                                                purchase.ToLocationId,
-                                                                purchase.Quantity),
-                                                                trans);
+                    InsertPurchase(purchase, con, trans);
                     trans.Commit();
                 }
                 catch (Exception e)
@@ -64,25 +51,77 @@ namespace TestCore.Models.SqlRepository
             }
         }
 
+        private void InsertPurchase(PurchaseMovement purchase, SqlConnection con, SqlTransaction trans)
+        {
+            decimal curAvgPrice;
+            int currStock;
+
+            GetCurrentStockAndAvgPrice(purchase, con, trans, out curAvgPrice, out currStock);
+
+            int newQty = currStock + purchase.Quantity;
+            decimal newVal = (curAvgPrice * currStock) + (purchase.Quantity * purchase.PurchasePrice);
+            decimal newAvgPrice = newVal / newQty;
+
+
+            object orderId = "null";
+            if (purchase.PurchaseOrderId != null)
+                orderId = purchase.PurchaseOrderId.Value;
+
+
+            // Insert row in StockMovement
+            DBHelper.Execute(con, string.Format(query, purchase.Date, purchase.ProductId,
+                                                      purchase.ToLocationId,
+                                                      purchase.Quantity,
+                                                      purchase.PurchasePrice,
+                                                      0, // SalePrice
+                                                      Convert.ToInt32(StockMovementType.Purchase),
+                                                      orderId),
+                                                      trans);
+            // Update StockStatus
+            DBHelper.Execute(con, string.Format(qryStock, purchase.ProductId,
+                                                        purchase.ToLocationId,
+                                                        purchase.Quantity),
+                                                        trans);
+
+            DBHelper.Execute(con, string.Format(qryUpdateAvgPrice, newAvgPrice,
+                                        purchase.ProductId),
+                                        trans);
+        }
+
+        private void GetCurrentStockAndAvgPrice(PurchaseMovement purchase, SqlConnection con, SqlTransaction trans, out decimal curAvgPrice, out int currStock)
+        {
+            // calculate new average price
+            curAvgPrice = Convert.ToDecimal(DBHelper.ExecuteScalar(con,
+                                    string.Format(qryCurrAvgPrice, purchase.ProductId),
+                                    trans));
+            currStock = Convert.ToInt32(DBHelper.ExecuteScalar(con,
+                            string.Format(qryCurrStck, purchase.ProductId),
+                            trans));
+        }
+
         public void Edit(PurchaseMovement purchase)
         {
             PurchaseMovement old = this.Find(purchase.StockMovementId.Value);
 
-            string query = "Update StockMovement " +
-                            " SET ToLocationId = {0} ," +
-                            " ProductId = {1}, " +
-                            " Qty = {2}, " +
-                            " PurchasePrice = {3}, " +
-                            " Date = '{4}' " +
-                            " WHERE StockMovementId = {5};";
+            // if no change then do not update
+            if (PurchaseMovement.Equals(purchase, old))
+                return;
 
-            string qryOldNullify = "Update StockStatus SET PurchaseQty -= {0} " +
-                                    "WHERE ProductId = {1} AND LocationId = {2}";
+            //string query = "Update StockMovement " +
+            //                " SET ToLocationId = {0} ," +
+            //                " ProductId = {1}, " +
+            //                " Qty = {2}, " +
+            //                " PurchasePrice = {3}, " +
+            //                " Date = '{4}' " +
+            //                " WHERE StockMovementId = {5};";
 
-            string qryStock = "IF NOT EXISTS(select 1 from StockStatus " +
-                "where ProductId = {0} and LocationId={1}) " +
-                "INSERT StockStatus(ProductId, LocationId) VALUES({0}, {1}); " +
-                "UPDATE StockStatus SET PurchaseQty += {2} WHERE ProductId = {0} AND LocationId = {1}";
+            ////string qryOldNullify = "Update StockStatus SET PurchaseQty -= {0} " +
+            ////                        "WHERE ProductId = {1} AND LocationId = {2}";
+
+            //string qryStock = "IF NOT EXISTS(select 1 from StockStatus " +
+            //    "where ProductId = {0} and LocationId={1}) " +
+            //    "INSERT StockStatus(ProductId, LocationId) VALUES({0}, {1}); " +
+            //    "UPDATE StockStatus SET PurchaseQty += {2} WHERE ProductId = {0} AND LocationId = {1}";
 
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
@@ -90,26 +129,12 @@ namespace TestCore.Models.SqlRepository
                 SqlTransaction trans = con.BeginTransaction();
                 try
                 {
-                    // Update the StockMovement Line
-                    DBHelper.Execute(con, string.Format(query,
-                                                    purchase.ToLocationId,
-                                                    purchase.ProductId,
-                                                    purchase.Quantity,
-                                                    purchase.PurchasePrice,
-                                                    purchase.Date,
-                                                    purchase.StockMovementId), trans);
-                    // Nullify the previous impact (reduce old quantity)
-                    DBHelper.Execute(con, string.Format(qryOldNullify,
-                                                        old.Quantity,
-                                                        old.ProductId,
-                                                        old.ToLocationId), trans);
-                    // Update Stock status for new values
-                    DBHelper.Execute(con, string.Format(qryStock,
-                                                        purchase.ProductId,
-                                                        purchase.ToLocationId,
-                                                        purchase.Quantity), trans);
-                    trans.Commit();
+                    // Remove previous transaction and nullify all impacts
+                    RemovePurchase(old, con, trans);
+                    // Insert new entry
+                    InsertPurchase(purchase, con, trans);
 
+                    trans.Commit();
                 }
                 catch (Exception e)
                 {
@@ -118,6 +143,20 @@ namespace TestCore.Models.SqlRepository
                 }
                 con.Close();
             }
+        }
+
+        private decimal GetUpdatedAvgPrice(PurchaseMovement purchase, SqlConnection con, SqlTransaction trans)
+        {
+            // Calculate Avg Price without this transaction
+            // S' = curent stock , Avg' = current Avg , v/q = value/qty of this trans
+            // oldAvg = ((S' * Avg') - v) / (S' - q)
+            decimal curAvgPrice; // Avg'
+            int currStock; // S'
+            GetCurrentStockAndAvgPrice(purchase, con, trans, out curAvgPrice, out currStock);
+            decimal v = purchase.Quantity * purchase.PurchasePrice;
+            int q = purchase.Quantity;
+            decimal newAvgPrice = ((currStock * curAvgPrice) - v) / (currStock - q);
+            return newAvgPrice;
         }
 
         public PurchaseMovement Find(long id)
@@ -210,31 +249,49 @@ namespace TestCore.Models.SqlRepository
             if (old == null)
                 return;
 
-            string query = "DELETE FROM StockMovement where StockMovementId = {0};";
-            string qryOldNullify = "Update StockStatus SET PurchaseQty -= {0} " +
-                                    "WHERE ProductId = {1} AND LocationId = {2}";
-
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 con.Open();
                 SqlTransaction trans = con.BeginTransaction();
                 try
                 {
-                    DBHelper.Execute(con, string.Format(query, id), trans);
-                    // Nullify the previous impact (reduce old quantity)
-                    DBHelper.Execute(con, string.Format(qryOldNullify,
-                                                        old.Quantity,
-                                                        old.ProductId,
-                                                        old.ToLocationId), trans);
+                    RemovePurchase(old, con, trans);
                     trans.Commit();
                 }
-                catch (Exception e)
+                catch
                 {
-                    trans.Rollback();
-                    throw new Exception("Unable to commit.", e);
+
                 }
-                con.Close();
+                finally
+                {
+                    con.Close();
+                }
+
+
             }
+        }
+
+        private void RemovePurchase(PurchaseMovement toRemove, SqlConnection con, SqlTransaction trans)
+        {
+            string query = "DELETE FROM StockMovement where StockMovementId = {0};";
+            string qryOldNullify = "Update StockStatus SET PurchaseQty -= {0} " +
+                                    "WHERE ProductId = {1} AND LocationId = {2}";
+            decimal newAvgPrice = GetUpdatedAvgPrice(toRemove, con, trans);
+
+            DBHelper.Execute(con, string.Format(query,
+                                            toRemove.StockMovementId),
+                                            trans);
+
+            // Nullify the previous impact (reduce old quantity)
+            DBHelper.Execute(con, string.Format(qryOldNullify,
+                                                toRemove.Quantity,
+                                                toRemove.ProductId,
+                                                toRemove.ToLocationId), trans);
+
+            // nullify the impact on Avg. Price
+            DBHelper.Execute(con, string.Format(qryUpdateAvgPrice,
+                                                    newAvgPrice,
+                                                    toRemove.ProductId), trans);
         }
     }
 }

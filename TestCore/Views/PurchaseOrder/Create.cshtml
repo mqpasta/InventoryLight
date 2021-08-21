@@ -33,17 +33,17 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label asp-for="Quantity" class="control-label"></label>
-                        <input asp-for="Quantity" class="form-control" value="0" />
+                        <input asp-for="Quantity" class="form-control" />
                         <span asp-validation-for="Quantity" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="ReceivedQuantity" class="control-label"></label>
-                        <input asp-for="ReceivedQuantity" class="form-control" readonly value="0" />
+                        <input asp-for="ReceivedQuantity" class="form-control" readonly />
                         <span asp-validation-for="ReceivedQuantity" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="BalanceQuantity" class="control-label"></label>
-                        <input asp-for="BalanceQuantity" class="form-control" readonly value="0" />
+                        <input asp-for="BalanceQuantity" class="form-control" readonly />
                         <span asp-validation-for="BalanceQuantity" class="text-danger"></span>
                     </div>
                 </div>
@@ -52,13 +52,13 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label asp-for="RMBRate" class="control-label"></label>
-                        <input asp-for="RMBRate" class="form-control" value="0.0" />
+                        <input asp-for="RMBRate" class="form-control" />
                         <span asp-validation-for="RMBRate" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4">
                         <label asp-for="ConvRate" class="control-label"></label>
-                        <input asp-for="ConvRate" class="form-control" value="0.0" />
+                        <input asp-for="ConvRate" class="form-control" />
                         <span asp-validation-for="ConvRate" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
@@ -89,12 +89,13 @@
                 <div class="checkbox">
                     <label>
                         <input asp-for="IsReceived" /> @Html.DisplayNameFor(model => model.IsReceived)
+                        <br /><span asp-validation-for="IsReceived" class="text-danger"></span>
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
-                @UIHelper.GetButton(Html,"Cancel","Index","PurchaseOrder",ButtonType.Cancel)
+                @UIHelper.GetButton(Html, "Cancel", "Index", "PurchaseOrder", ButtonType.Cancel)
             </div>
         </form>
     </div>
@@ -102,33 +103,21 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('#Quantity').change(function () {
+                calculatePurchaseOrderValues();
+            });
+            $('#RMBRate').change(function () {
+                calculatePurchaseOrderValues();
+            });
+            $('#ConvRate').change(function () {
+                calculatePurchaseOrderValues();
+            });
+            $('.search-list').select2();
+            calculatePurchaseOrderValues();
+        });
+    </script>
 }
 
-<script>
-
-    $(document).ready(function () {
-        function calculateValues() {
-            var qty = parseInt($("#Quantity").val());
-            var rate = parseFloat($("#ConvRate").val());
-            var rmb = parseFloat($("#RMBRate").val());
-
-            var rmbAmount = qty * rmb;
-            var pkr = rate * rmb;
-            var pkramount = rate * rmb * qty;
-
-            $("#RMBAmount").val(rmbAmount);
-            $("#PKRAmount").val(pkramount);
-            $("#PKRCost").val(pkr);
-        };
-        $('#Quantity').change(function () {
-            calculateValues();
-        });
-        $('#RMBRate').change(function () {
-            calculateValues();
-        });
-        $('#ConvRate').change(function () {
-            calculateValues();
-        });
-        $('.search-list').select2();
-    });
-</script>
