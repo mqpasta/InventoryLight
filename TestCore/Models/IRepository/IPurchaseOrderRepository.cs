@@ -17,6 +17,5 @@ namespace TestCore.Models.IRepository
         List<PurchaseOrder> Search(DateTime? startDate, DateTime? endDate,
                                     long? locationId, long? productId,
                                     bool? isReceived, bool? isBalanceQuantity);
-        int TotalReceived(long id);
     }
 }

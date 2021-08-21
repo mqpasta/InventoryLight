@@ -83,7 +83,12 @@ namespace TestCore.Models.SqlRepository
         public IEnumerable GetProducts()
         {
             List<Product> products = new List<Product>();
-            string query = "SELECT * FROM Product";
+            string query = "with cte_po AS ( select ProductId, Max(PurchaseOrderId) as LastPO " +
+                " from PurchaseOrder Group By ProductId ) " +
+                "Select P.*, ISNULL(PO.CostPrice,0) AS CostPrice from PurchaseOrder PO Inner Join cte_po CPO " +
+                " ON PO.PurchaseOrderId = CPO.LastPO Right Join Product P " +
+                "ON P.ProductId = PO.ProductId";
+
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 con.Open();
@@ -99,7 +104,7 @@ namespace TestCore.Models.SqlRepository
                             ProductCode = Convert.ToInt16(r["ProductCode"]),
                             ProductName = Convert.ToString(r["ProductName"]),
                             PurchasePrice = Convert.ToDecimal(r["PurchasePrice"]),
-                            SalePrice = Convert.ToDecimal(r["SalePrice"])
+                            SalePrice = Convert.ToDecimal(r["CostPrice"])
                         });
                     }
                 }
