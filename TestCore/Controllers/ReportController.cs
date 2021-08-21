@@ -89,7 +89,7 @@ namespace TestCore.Controllers
         {
             filter.Result = _stockRep.Search(filter.StartDate, filter.EndDate,
                                     (filter.LocationId < 0 ? null as Nullable<long> : filter.LocationId),
-                                    (filter.ProductId < 0) ? null as Nullable<long> : filter.LocationId,
+                                    (filter.ProductId < 0) ? null as Nullable<long> : filter.ProductId,
                                     (filter.Type == StockMovementType.All) ? null as Nullable<StockMovementType> : filter.Type);
 
             SetDropDownLists(filter.ProductId, filter.LocationId);
