@@ -9,6 +9,8 @@ namespace TestCore.Helper
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            return;
+
             byte[] value;
             object data = context.HttpContext.Session.TryGetValue("login", out value);
 

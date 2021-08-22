@@ -1,3 +1,6 @@
+Use [PastaPackages]
+Go
+
 -- =============================================
 -- Create basic stored procedure template
 -- =============================================
