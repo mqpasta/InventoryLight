@@ -51,28 +51,40 @@ namespace TestCore.Controllers
             return View("PurchaseOrder", filter);
         }
 
-        private void SetDropDownLists(long? selectedProduct = null, long? locationId = null)
+        private void SetDropDownLists(long? productId = null, long? locationId = null,
+                                        bool isAllNeed = true)
         {
 
             List<Location> locs = _locRep.GetLocations();
-            locs.Insert(0,
-                new Location()
-                {
-                    LocationId = -1,
-                    LocationName = "All"
-                });
-            ViewBag.VBLocationList = locs;
+            if (isAllNeed)
+            {
+                locs.Insert(0,
+                    new Location()
+                    {
+                        LocationId = -1,
+                        LocationName = "All"
+                    });
+            }
 
             List<Product> prods = _prodRep.GetProducts() as List<Product>;
-            prods.Insert(0, new Product()
+            if (isAllNeed)
             {
-                ProductId = -1,
-                ProductName = "All"
-            });
+                prods.Insert(0, new Product()
+                {
+                    ProductId = -1,
+                    ProductName = "All"
+                });
+            }
 
-            ViewBag.VBLocationlist = new SelectList(ViewBag.VBLocationList, "LocationId", "LocationName", locationId);
-            ViewBag.VBProductList = new SelectList(prods, "ProductId", "ProductCodeName", selectedProduct);
+            if (locationId == null)
+                ViewBag.VBLocationlist = new SelectList(locs, "LocationId", "LocationName");
+            else
+                ViewBag.VBLocationlist = new SelectList(locs, "LocationId", "LocationName", locationId);
 
+            if (productId == null)
+                ViewBag.VBProductList = new SelectList(prods, "ProductId", "ProductCodeName");
+            else
+                ViewBag.VBProductList = new SelectList(prods, "ProductId", "ProductCodeName", productId);
         }
 
 
@@ -84,7 +96,6 @@ namespace TestCore.Controllers
             return View(model);
         }
 
-
         public IActionResult GenerateStockDetails(StockDetailReport filter)
         {
             filter.Result = _stockRep.Search(filter.StartDate, filter.EndDate,
@@ -94,6 +105,36 @@ namespace TestCore.Controllers
 
             SetDropDownLists(filter.ProductId, filter.LocationId);
             return View("StockDetails", filter);
+        }
+
+        public IActionResult ItemLedger(StockDetailReport filter)
+        {
+
+            SetDropDownLists(isAllNeed: false);
+
+            long prevBalance = 0;
+
+            if (filter == null)
+                return View(filter);
+
+            if (filter.StartDate != null)
+            {
+                ViewBag.Log = "in start date<br/>";
+                prevBalance = _stockRep.GetBalanceQty(filter.LocationId, 
+                                                filter.ProductId, 
+                                                filter.StartDate.Value);
+                ViewBag.Log += prevBalance;
+            }
+            filter.Result = _stockRep.Search(
+                                    filter.StartDate, filter.EndDate,
+                                    filter.LocationId,
+                                    filter.ProductId,
+                                    StockMovementType.All
+                                    );
+
+
+            ViewBag.PreviousBalance = prevBalance;
+            return View(filter);
         }
     }
 }

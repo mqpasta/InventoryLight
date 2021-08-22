@@ -181,5 +181,27 @@ namespace TestCore.Models.SqlRepository
             }
 
         }
+
+        public int GetBalanceQty(long locationId, long productId, DateTime startDate)
+        {
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            {
+                
+                SqlParameter paramLocationId = new SqlParameter(
+                    StoreProceduresParams.GetOpeningQty.LocationId, locationId);
+                SqlParameter paramProductId = new SqlParameter(
+                    StoreProceduresParams.GetOpeningQty.ProductId, productId);
+                SqlParameter paramStartDate = new SqlParameter(
+                    StoreProceduresParams.GetOpeningQty.StartDate, startDate);
+
+                con.Open();
+                var result = DBHelper.ExecuteScalar(con, StorePorcedureNames.GetOpeningQty,
+                                                paramLocationId, paramProductId, paramStartDate);
+                con.Close();
+                    
+                return Convert.ToInt32(result);
+
+            }
+        }
     }
 }
