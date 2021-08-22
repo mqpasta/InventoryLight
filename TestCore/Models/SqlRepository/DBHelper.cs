@@ -116,5 +116,16 @@ namespace TestCore.Models.SqlRepository
 
             return res;
         }
+
+        public static object ExecuteScalar(SqlConnection con, StorePorcedureNames name, params SqlParameter[] parameters)
+        {
+            string spName = Enum.GetName(typeof(StorePorcedureNames), name);
+            SqlCommand cmd = new SqlCommand(spName, con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            foreach (SqlParameter p in parameters)
+                cmd.Parameters.Add(p);
+
+            return cmd.ExecuteScalar();
+        }
     }
 }

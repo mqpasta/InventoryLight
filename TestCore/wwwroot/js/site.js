@@ -85,6 +85,28 @@ function footerTotal(api, col, round) {
     );
 }
 
+function setTableWihoutSortAndFooter(tableId, fileName) {
+    $(tableId).DataTable({
+        dom: '<"top"if>rt<"bottom"Blp><"clear">',
+        "deferRender": true,
+        responsive: true,
+        "ordering": false,
+        buttons: [
+            {
+                extend: 'print',
+                text: '<i class="bi bi-print"></i> Print',
+                messageBottom: 'Report generated on ' + getTodayDate(),
+                footer: true,
+            },
+            {
+                extend: 'pdfHtml5',
+                footer: true,
+                filename: fileName + "_" + getTodayDate().replace(/[/]/g, '-')
+            }
+        ]
+    });
+}
+
 function setTableForReport(tableId, columnIndex, roundFactor, fileName) {
     $(tableId).DataTable({
         dom: '<"top"if>rt<"bottom"Blp><"clear">',
@@ -105,10 +127,8 @@ function setTableForReport(tableId, columnIndex, roundFactor, fileName) {
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api(), data;
-            if (columnIndex > -1)
+            if (columnIndex > -1) 
                 footerTotal(api, columnIndex, roundFactor);
-
-
         }
     });
 }
