@@ -6,4 +6,3 @@ Go
 --select top 10 * from StockMovement WHERE StockMovementType=2
 --commit
 
-select * from StockStatus 
