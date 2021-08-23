@@ -22,13 +22,11 @@ namespace TestCore.Models.SqlRepository
             "INSERT StockStatus(ProductId, LocationId) VALUES({0}, {1}); " +
             "UPDATE StockStatus SET PurchaseQty += {2} WHERE ProductId = {0} AND LocationId = {1}";
         string qryCurrAvgPrice = "SELECT AvgPrice FROM Product where ProductId = {0}";
-        string qryCurrStck = "SELECT sum(purchaseqty) FROM StockStatus WHERE ProductId = {0}";
+        string qryCurrStck = "SELECT sum(ISNULL(purchaseqty,0)) FROM StockStatus WHERE ProductId = {0}";
         string qryUpdateAvgPrice = "Update Product SET AvgPrice = {0} WHERE ProductId = {1}";
 
         public void Add(PurchaseMovement purchase)
         {
-
-
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 con.Open();
