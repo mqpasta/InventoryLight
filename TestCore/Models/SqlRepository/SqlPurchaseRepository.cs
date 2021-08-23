@@ -86,15 +86,21 @@ namespace TestCore.Models.SqlRepository
                                         trans);
         }
 
-        private void GetCurrentStockAndAvgPrice(PurchaseMovement purchase, SqlConnection con, SqlTransaction trans, out decimal curAvgPrice, out int currStock)
+        private void GetCurrentStockAndAvgPrice(PurchaseMovement purchase, SqlConnection con, 
+                                    SqlTransaction trans, 
+                                    out decimal curAvgPrice, out int currStock)
         {
             // calculate new average price
             curAvgPrice = Convert.ToDecimal(DBHelper.ExecuteScalar(con,
                                     string.Format(qryCurrAvgPrice, purchase.ProductId),
                                     trans));
-            currStock = Convert.ToInt32(DBHelper.ExecuteScalar(con,
+            var dbCurrStock = DBHelper.ExecuteScalar(con,
                             string.Format(qryCurrStck, purchase.ProductId),
-                            trans));
+                            trans);
+            if (DBNull.Value.Equals(dbCurrStock))
+                currStock = 0;
+            else
+                currStock = Convert.ToInt32(dbCurrStock);
         }
 
         public void Edit(PurchaseMovement purchase)

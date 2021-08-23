@@ -15,16 +15,33 @@ namespace TestCore.Models.SqlRepository
         public void Add(Product p)
         {
             string query = "Insert Into Product(ProductCode, ProductName, PurchasePrice, SalePrice)" +
-                " Values({0},'{1}',{2},{3});";
+                " Values({0},'{1}',{2},{3}); SELECT SCOPE_IDENTITY();";
+            string qryStockStatus = "Insert Into StockStatus (ProductId, LocationId) " +
+                                    "Select {0}, LocationId from Location";
+
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 con.Open();
-                DBHelper.Execute(con, string.Format(query,
+                SqlTransaction trans = con.BeginTransaction();
+                try
+                {
+                    long productId = Convert.ToInt64(DBHelper.ExecuteScalar(con, string.Format(query,
                                                     p.ProductCode,
                                                     p.ProductName,
                                                     p.PurchasePrice,
-                                                    p.SalePrice));
-                con.Close();
+                                                    p.SalePrice), trans));
+                    DBHelper.Execute(con, string.Format(qryStockStatus, productId), trans);
+                    trans.Commit();
+                }
+                catch (Exception e)
+                {
+                    trans.Rollback();
+                    throw new Exception("Unable to commit the transaction.", e);
+                }
+                finally
+                {
+                    con.Close();
+                }
             }
         }
 

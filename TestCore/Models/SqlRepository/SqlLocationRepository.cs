@@ -16,13 +16,31 @@ namespace TestCore.Models.SqlRepository
             using (SqlConnection _conn = new SqlConnection(DBHelper.ConnectionString))
             {
                 _conn.Open();
-                string query = string.Format("Insert Into Location(LocationCode, LocationName, IsWearhouse) " +
-                    " values('{0}','{1}',{2});",
+                SqlTransaction trans = _conn.BeginTransaction();
+                try
+                {
+                    string query = string.Format("Insert Into Location(LocationCode, LocationName, IsWearhouse) " +
+                    " values('{0}','{1}',{2}); SELECT SCOPE_IDENTITY();",
                     l.LocationCode, l.LocationName,
                     Convert.ToInt16(l.IsWearhouse));
+                    long locationId = Convert.ToInt64(DBHelper.ExecuteScalar(_conn, query, trans));
 
-                DBHelper.Execute(_conn, query);
-                _conn.Close();
+                    string qryStockStatus = "Insert Into StockStatus (ProductId, LocationId) " +
+                        "Select ProductId, {0} from Product";
+                    DBHelper.Execute(_conn, string.Format(qryStockStatus, locationId), trans);
+                    trans.Commit();
+
+
+                }
+                catch (Exception e)
+                {
+                    trans.Rollback();
+                    throw new Exception("Unable to commit the transaction.", e);
+                }
+                finally
+                {
+                    _conn.Close();
+                }
             }
         }
 
