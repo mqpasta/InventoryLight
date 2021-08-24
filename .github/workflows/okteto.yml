@@ -31,7 +31,7 @@ jobs:
     - name: "Activate namespace"
       uses: okteto/namespace@master
       with:
-        name: mqpasta
+        namespace: mqpasta
         
     - name: "Okteto"
       uses: okteto/deploy-stack@master
