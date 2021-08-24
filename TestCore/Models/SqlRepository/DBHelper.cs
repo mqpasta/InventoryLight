@@ -127,5 +127,22 @@ namespace TestCore.Models.SqlRepository
 
             return cmd.ExecuteScalar();
         }
+
+        public static DataSet LoadData(SqlConnection con,StorePorcedureNames name, params SqlParameter[] parameters)
+        {
+            DataSet ds = new DataSet();// to store reuslt
+            string spName = Enum.GetName(typeof(StorePorcedureNames), name);
+
+            SqlCommand cmd = new SqlCommand(spName, con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            foreach (SqlParameter p in parameters)
+                cmd.Parameters.Add(p);
+
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            adapter.Fill(ds);
+
+            return ds;
+        }
     }
 }

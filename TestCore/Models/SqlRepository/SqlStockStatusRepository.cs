@@ -182,6 +182,34 @@ namespace TestCore.Models.SqlRepository
 
         }
 
+        public DataTable GetItemLedgerSummary(DateTime? startDate, DateTime? endDate, 
+                            long? locationId, long? productId)
+        {
+            using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
+            {
+                SqlParameter paramLocationId = new SqlParameter(
+                    StoreProceduresParams.ItemLedgerSummary.LocationId, locationId);
+                SqlParameter paramProductId = new SqlParameter(
+                    StoreProceduresParams.ItemLedgerSummary.ProductId, productId);
+                SqlParameter paramStartDate = new SqlParameter(
+                    StoreProceduresParams.ItemLedgerSummary.StartDate, startDate);
+                SqlParameter paramEndDate = new SqlParameter(
+                    StoreProceduresParams.ItemLedgerSummary.EndDate , endDate);
+
+                
+                con.Open();
+                DataSet ds = DBHelper.LoadData(con, StorePorcedureNames.ItemLedgerSummary,
+                            paramLocationId, paramProductId, paramStartDate, paramEndDate);
+
+
+
+                if (ds != null && ds.Tables.Count > 0)
+                    return ds.Tables[0];
+            }
+
+            return new DataTable();
+        }
+
         public int GetBalanceQty(long locationId, long productId, DateTime startDate)
         {
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))

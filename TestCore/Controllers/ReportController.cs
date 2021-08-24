@@ -136,5 +136,32 @@ namespace TestCore.Controllers
             ViewBag.PreviousBalance = prevBalance;
             return View(filter);
         }
+
+        public IActionResult ItemLedgerSummary(StockDetailReport filter)
+        {
+
+            SetDropDownLists(isAllNeed: false);
+
+            long prevBalance = 0;
+
+            if (filter == null)
+                return View(filter);
+
+            if (filter.StartDate != null)
+            {
+                prevBalance = _stockRep.GetBalanceQty(filter.LocationId,
+                                                filter.ProductId,
+                                                filter.StartDate.Value);
+            }
+            filter.Result = _stockRep.GetItemLedgerSummary(
+                                    filter.StartDate, filter.EndDate,
+                                    filter.LocationId,
+                                    filter.ProductId
+                                    );
+
+
+            ViewBag.PreviousBalance = prevBalance;
+            return View(filter);
+        }
     }
 }

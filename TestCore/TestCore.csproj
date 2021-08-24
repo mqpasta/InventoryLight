@@ -30,6 +30,9 @@
     <Content Update="Views\PurchaseOrder\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Report\ItemLedgerSummary.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Report\ItemLedger.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
