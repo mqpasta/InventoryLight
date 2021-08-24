@@ -6,4 +6,4 @@
  # sleep 1s
  # /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "King.1234" -d master -i InsertProducts.sql
  sleep 1s
- /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "King.1234" -d master -i sp_ItemLedgerSummary.sql
+ /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "King.1234" -d PastaPackages -i sp_ItemLedgerSummary.sql
