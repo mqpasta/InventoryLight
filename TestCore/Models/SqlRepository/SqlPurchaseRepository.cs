@@ -58,7 +58,9 @@ namespace TestCore.Models.SqlRepository
 
             int newQty = currStock + purchase.Quantity;
             decimal newVal = (curAvgPrice * currStock) + (purchase.Quantity * purchase.PurchasePrice);
-            decimal newAvgPrice = newVal / newQty;
+            decimal newAvgPrice = 0.0M;
+            if (newQty > 0)
+                newAvgPrice = newVal / newQty;
 
 
             object orderId = "null";
@@ -67,7 +69,7 @@ namespace TestCore.Models.SqlRepository
 
 
             // Insert row in StockMovement
-            DBHelper.Execute(con, string.Format(query, purchase.Date.ToString("s"), 
+            DBHelper.Execute(con, string.Format(query, purchase.Date.ToString("s"),
                                                        purchase.ProductId,
                                                       purchase.ToLocationId,
                                                       purchase.Quantity,
@@ -87,8 +89,8 @@ namespace TestCore.Models.SqlRepository
                                         trans);
         }
 
-        private void GetCurrentStockAndAvgPrice(PurchaseMovement purchase, SqlConnection con, 
-                                    SqlTransaction trans, 
+        private void GetCurrentStockAndAvgPrice(PurchaseMovement purchase, SqlConnection con,
+                                    SqlTransaction trans,
                                     out decimal curAvgPrice, out int currStock)
         {
             // calculate new average price
@@ -160,7 +162,11 @@ namespace TestCore.Models.SqlRepository
             GetCurrentStockAndAvgPrice(purchase, con, trans, out curAvgPrice, out currStock);
             decimal v = purchase.Quantity * purchase.PurchasePrice;
             int q = purchase.Quantity;
-            decimal newAvgPrice = ((currStock * curAvgPrice) - v) / (currStock - q);
+            int newStock = currStock - q;
+            decimal newAvgPrice = 0.0M;
+            if (newStock > 0)
+                newAvgPrice = ((currStock * curAvgPrice) - v) / (currStock - q);
+
             return newAvgPrice;
         }
 
@@ -212,7 +218,7 @@ namespace TestCore.Models.SqlRepository
         {
             List<PurchaseMovement> purchaseMovements = new List<PurchaseMovement>();
 
-            string query = "select * from StockMovement where StockMovementType = {0}";
+            string query = "select * from StockMovement where StockMovementType = {0} and PurchaseOrderId IS NULL";
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 DataSet ds = DBHelper.LoadData(con,
