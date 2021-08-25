@@ -47,9 +47,20 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label asp-for="ProductId" class="control-label"></label>
+                                <label asp-for="ProductId" class="control-label" ></label>
                                 <select asp-for="ProductId" asp-items="@(ViewBag.VBProductList)" class="form-control search-list"></select>
                                 <span asp-validation-for="ProductId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input asp-for="IsSummary" class="radio-inline" /> 
+                                    <label asp-for="IsSummary" class="checkbox-inline"></label>
+                                    @*@Html.DisplayNameFor(model => model.IsSummary)*@
+                                    <span asp-validation-for="IsSummary" class="text-danger"></span>
+
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -87,120 +98,83 @@
 && (Model.Result.Rows.Count > 0))
                     {
 
-                        <table class="table" id="ItemLedgerSummaryReport">
+                        <table class="table table-bordered" id="ItemLedgerSummaryReport">
                             <thead>
                                 <tr>
                                     <th>
                                         Product
                                     </th>
                                     <th>
-                                        Location
+                                        <span>Location</span>
                                     </th>
                                     <th>
-                                        Type
+                                        Opening
                                     </th>
                                     <th>
-                                        In Quantity
+                                        In Qty
                                     </th>
                                     <th>
-                                        Out Quantity
+                                        Out Qty
                                     </th>
                                     <th>
-                                        Balance
+                                        Balance Qty
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <b>Previous Balance</b>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>
-                                        @{
-                                            long prevBal = Convert.ToInt32(ViewBag.PreviousBalance);
-                                        }
-                                        @ViewBag.PreviousBalance
-                                    </td>
-                                </tr>
-                            @foreach (System.Data.DataRow item in Model.Result.Rows)
-                            {
-                                //var date = Convert.ToDateTime(item["Date"]).ToShortDateString();
-                                string pname = Convert.ToString(item["ProductName"]);
-                                var frm = item["FromLocationName"];
-                                var to = item["ToLocationName"];
-                                var t = item["Detail"];
-                                int inQty = Convert.ToInt32(item["InQty"]);
-                                int outQty = Convert.ToInt32(item["OutQty"]);
-                                <tr>
-                                    <td>
-                                        @{
-                                            if (pname.Length > 25)
+                                @foreach (System.Data.DataRow item in Model.Result.Rows)
+                                {
+                                    string pname = Convert.ToString(item["ProductName"]);
+                                    var location = item["LocationName"];
+                                    var opBal = item["OpeningBal"];
+                                    int inQty = Convert.ToInt32(item["InQty"]);
+                                    int outQty = Convert.ToInt32(item["OutQty"]);
+                                    var balQty = item["BalanceQty"];
+                                    <tr>
+                                        <td>
+
+                                            <span>@pname</span>
+
+
+                                        </td>
+                                        <td>
+                                            @if (!Model.IsSummary || Model.LocationId > 0)
                                             {
-                                                <span>@pname.Substring(0, 25)...</span>
+                                                @location
                                             }
                                             else
                                             {
-                                                <span>@pname</span>
+                                                <span>Wearhouses</span>
                                             }
-                                        }
+                                        </td>
+                                        <td align="right">
 
-                                    </td>
-                                    <td>
-                                        @{
-
-                                            if (!DBNull.Value.Equals(frm))
-                                            {
-                                                if (inQty > 0)
-                                                {
-                                                    <span>@to (from: @frm)</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>@frm (to: @to)</span>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <span>@to</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td>
-
-                                        <span>@t</span>
-                                    </td>
-                                    <td>
-                                        @inQty
-                                    </td>
-                                    <td>
-                                        @outQty
-                                    </td>
-                                    <td>
-                                        @{
-                                            prevBal = prevBal + inQty - outQty;
-                                        }
-                                        @prevBal
-                                    </td>
+                                            @opBal
+                                        </td>
+                                        <td align="right">
+                                            @inQty
+                                        </td>
+                                        <td align="right">
+                                            @outQty
+                                        </td>
+                                        <td align="right">
+                                            @balQty
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="6">&nbsp;</th>
                                 </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="6">&nbsp;</th>
+                            </tfoot>
+                        </table>
 
-                            </tr>
-                        </tfoot>
-                    </table>
-
-                }
-                else
-                {
-                    <div>No rows returned.</div>
-                }
+                    }
+                    else
+                    {
+                        <div>No rows returned.</div>
+                    }
 
                 </div>
 

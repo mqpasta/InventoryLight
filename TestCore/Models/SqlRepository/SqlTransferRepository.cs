@@ -37,7 +37,8 @@ namespace TestCore.Models.SqlRepository
                 {
 
                     // Insert row in StockMovement
-                    DBHelper.Execute(con, string.Format(query, transer.Date, transer.ProductId,
+                    DBHelper.Execute(con, string.Format(query, transer.Date.ToString("s"),
+                                                              transer.ProductId,
                                                               transer.FromLocationId,
                                                               transer.ToLocationId,
                                                               transer.Quantity,
@@ -111,7 +112,7 @@ namespace TestCore.Models.SqlRepository
                                                     transfer.FromLocationId,
                                                     transfer.ProductId,
                                                     transfer.Quantity,
-                                                    transfer.Date,
+                                                    transfer.Date.ToString("s"),
                                                     transfer.StockMovementId), trans);
                     // Nullify Source: the previous impact (reduce old sale quantity)
                     DBHelper.Execute(con, string.Format(qryOldNullifySource,

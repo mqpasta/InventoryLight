@@ -182,8 +182,8 @@ namespace TestCore.Models.SqlRepository
 
         }
 
-        public DataTable GetItemLedgerSummary(DateTime? startDate, DateTime? endDate, 
-                            long? locationId, long? productId)
+        public DataTable GetItemLedgerSummary(DateTime? startDate, DateTime? endDate,
+                            long? locationId, long? productId, bool isSummary)
         {
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
@@ -194,12 +194,14 @@ namespace TestCore.Models.SqlRepository
                 SqlParameter paramStartDate = new SqlParameter(
                     StoreProceduresParams.ItemLedgerSummary.StartDate, startDate);
                 SqlParameter paramEndDate = new SqlParameter(
-                    StoreProceduresParams.ItemLedgerSummary.EndDate , endDate);
+                    StoreProceduresParams.ItemLedgerSummary.EndDate, endDate);
+                SqlParameter paramIsSummary = new SqlParameter(
+                    StoreProceduresParams.ItemLedgerSummary.IsSummary, isSummary);
 
-                
+
                 con.Open();
                 DataSet ds = DBHelper.LoadData(con, StorePorcedureNames.ItemLedgerSummary,
-                            paramLocationId, paramProductId, paramStartDate, paramEndDate);
+                            paramLocationId, paramProductId, paramStartDate, paramEndDate,paramIsSummary);
 
 
 
@@ -214,19 +216,19 @@ namespace TestCore.Models.SqlRepository
         {
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
-                
+
                 SqlParameter paramLocationId = new SqlParameter(
                     StoreProceduresParams.GetOpeningQty.LocationId, locationId);
                 SqlParameter paramProductId = new SqlParameter(
                     StoreProceduresParams.GetOpeningQty.ProductId, productId);
                 SqlParameter paramStartDate = new SqlParameter(
-                    StoreProceduresParams.GetOpeningQty.StartDate, startDate);
+                    StoreProceduresParams.GetOpeningQty.StartDate, startDate.ToString("s"));
 
                 con.Open();
                 var result = DBHelper.ExecuteScalar(con, StorePorcedureNames.GetOpeningQty,
                                                 paramLocationId, paramProductId, paramStartDate);
                 con.Close();
-                    
+
                 return Convert.ToInt32(result);
 
             }

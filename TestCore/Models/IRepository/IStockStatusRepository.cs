@@ -18,7 +18,7 @@ namespace TestCore.Models.IRepository
         DataTable Search(DateTime? startDate, DateTime? endDate, long? locationId,
                             long? productId, StockMovementType? type);
         DataTable GetItemLedgerSummary(DateTime? startDate, DateTime? endDate,
-                            long? locationId, long? productId);
+                            long? locationId, long? productId, bool isSummary);
         int GetBalanceQty(long locationId, long productId, DateTime startDate);
     }
 

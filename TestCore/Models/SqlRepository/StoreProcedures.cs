@@ -26,6 +26,7 @@ namespace TestCore.Models.SqlRepository
             public const string ProductId = "@ProductId";
             public const string StartDate = "@StartDate";
             public const string EndDate = "@EndDate";
+            public const string IsSummary = "@Summary";
         }
     }
 }

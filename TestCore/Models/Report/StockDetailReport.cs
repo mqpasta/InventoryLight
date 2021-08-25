@@ -29,6 +29,9 @@ namespace TestCore.Models.Reports
 
         public DataTable Result { get; set; }
 
+        [DisplayName("Consolidated")]
+        public bool IsSummary { get; set; }
+
 
     }
 }

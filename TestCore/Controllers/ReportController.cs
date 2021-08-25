@@ -140,27 +140,29 @@ namespace TestCore.Controllers
         public IActionResult ItemLedgerSummary(StockDetailReport filter)
         {
 
-            SetDropDownLists(isAllNeed: false);
+            SetDropDownLists(isAllNeed: true);
 
-            long prevBalance = 0;
+            //long prevBalance = 0;
 
             if (filter == null)
                 return View(filter);
 
-            if (filter.StartDate != null)
-            {
-                prevBalance = _stockRep.GetBalanceQty(filter.LocationId,
-                                                filter.ProductId,
-                                                filter.StartDate.Value);
-            }
+            //if (filter.StartDate != null)
+            //{
+            //    prevBalance = _stockRep.GetBalanceQty(filter.LocationId,
+            //                                    filter.ProductId,
+            //                                    filter.StartDate.Value);
+            //}
             filter.Result = _stockRep.GetItemLedgerSummary(
-                                    filter.StartDate, filter.EndDate,
-                                    filter.LocationId,
-                                    filter.ProductId
+                                    filter.StartDate, 
+                                    filter.EndDate,
+                                     (filter.LocationId < 0 ? null as Nullable<long> : filter.LocationId),
+                                    (filter.ProductId < 0) ? null as Nullable<long> : filter.ProductId,
+                                    filter.IsSummary
                                     );
 
 
-            ViewBag.PreviousBalance = prevBalance;
+            //ViewBag.PreviousBalance = prevBalance;
             return View(filter);
         }
     }
