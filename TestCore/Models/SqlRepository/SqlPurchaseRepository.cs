@@ -67,7 +67,8 @@ namespace TestCore.Models.SqlRepository
 
 
             // Insert row in StockMovement
-            DBHelper.Execute(con, string.Format(query, purchase.Date, purchase.ProductId,
+            DBHelper.Execute(con, string.Format(query, purchase.Date.ToString("s"), 
+                                                       purchase.ProductId,
                                                       purchase.ToLocationId,
                                                       purchase.Quantity,
                                                       purchase.PurchasePrice,

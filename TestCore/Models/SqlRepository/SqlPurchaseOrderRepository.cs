@@ -44,7 +44,7 @@ namespace TestCore.Models.SqlRepository
                 try
                 {
                     DBHelper.Execute(con, string.Format(qryInsert,
-                                    purchaseOrder.PODate,
+                                    purchaseOrder.PODate.ToString("s"),
                                     purchaseOrder.ProductId,
                                     purchaseOrder.ConvRate,
                                     purchaseOrder.RMBRate,
@@ -73,7 +73,7 @@ namespace TestCore.Models.SqlRepository
             {
                 con.Open();
                 DBHelper.Execute(con, string.Format(qryUpdate,
-                                    purchaseOrder.PODate,
+                                    purchaseOrder.PODate.ToString("s"),
                                     purchaseOrder.ProductId,
                                     purchaseOrder.ConvRate,
                                     purchaseOrder.RMBRate,
