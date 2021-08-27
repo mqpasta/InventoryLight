@@ -31,9 +31,13 @@
                         <input asp-for="Quantity" class="form-control" />
                         <span asp-validation-for="Quantity" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="PurchasePrice"></label>
+                        <input asp-for="PurchasePrice" class="form-control" />
+                        <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                    </div>
                     <input asp-for="ProductId" type="hidden" />
                     <input asp-for="PurchaseOrderId" type="hidden" />
-                    <input asp-for="PurchasePrice" type="hidden" />
                     <input asp-for="StockMovementId" type="hidden" />
                 </form>
             </div>

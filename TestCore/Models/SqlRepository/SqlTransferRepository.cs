@@ -181,7 +181,7 @@ namespace TestCore.Models.SqlRepository
         public IEnumerable GetTransfers()
         {
             List<SaleMovement> movements = new List<SaleMovement>();
-            string query = "SELECT * FROM StockMovement where StockMovementType = {0}";
+            string query = "SELECT * FROM StockMovement where StockMovementType = {0} ORDER BY DATE";
 
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
