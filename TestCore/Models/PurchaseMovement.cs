@@ -43,7 +43,7 @@ namespace TestCore.Models
         }
 
         [Required]
-        [DisplayName("Purchase Price")]
+        [DisplayName("Cost Price")]
         public decimal PurchasePrice { get; set; }
 
         public Location ToLocation

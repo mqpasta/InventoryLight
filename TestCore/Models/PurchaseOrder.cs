@@ -97,8 +97,5 @@ namespace TestCore.Models
         [Required]
         [DefaultValue(false)]
         public bool IsReceived { get; set; }
-
-        [DisplayName("Cost Price")]
-        public decimal CostPrice { get; set; }
     }
 }

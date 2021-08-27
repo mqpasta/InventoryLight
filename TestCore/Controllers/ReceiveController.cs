@@ -38,7 +38,7 @@ namespace TestCore.Controllers
             PurchaseMovement movement = new PurchaseMovement();
             movement.ProductId = found.ProductId;
             movement.PurchaseOrderId = found.PurchaseOrderId;
-            movement.PurchasePrice = found.PKRCost;
+            //movement.PurchasePrice = found.PKRCost;
             movement.Date = DateTime.Today;
 
             SetDropDownLists();
@@ -78,6 +78,7 @@ namespace TestCore.Controllers
                 found.ToLocationId = purchase.ToLocationId;
                 found.Quantity = purchase.Quantity;
                 found.Date = purchase.Date;
+                found.PurchasePrice = purchase.PurchasePrice;
                 rep.Edit(found);
             }
 

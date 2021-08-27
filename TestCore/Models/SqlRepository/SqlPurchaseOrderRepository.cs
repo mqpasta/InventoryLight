@@ -16,19 +16,18 @@ namespace TestCore.Models.SqlRepository
     {
 
         #region QueryStrings
-        readonly string qryInsert = "INSERT INTO PurchaseOrder(PODate,ProductId,ConvRate,RMBRate,Quantity,IsReceived, CostPrice) " +
-            " Values('{0}',{1},{2},{3},{4},{5},{6});";
-        readonly string qryGetPurchases = "SELECT * FROM ViewPurchaseOrders";
-        readonly string qryFindOrder = "SELECT * FROM ViewPurchaseOrders WHERE PurchaseOrderId={0}";
+        readonly string qryInsert = "INSERT INTO PurchaseOrder(PODate,ProductId,ConvRate,RMBRate,Quantity,IsReceived) " +
+            " Values('{0}',{1},{2},{3},{4},{5});";
+        readonly string qryGetPurchases = "SELECT * FROM ViewPurchaseOrders Order By PODATE";
+        readonly string qryFindOrder = "SELECT * FROM ViewPurchaseOrders WHERE PurchaseOrderId={0} ORDER BY PODate";
         readonly string qryUpdate = "UPDATE PurchaseOrder " +
                                     " SET PODate = '{0}', " +
                                     " ProductId = {1}, " +
                                     " ConvRate = {2}, " +
                                     " RMBRate = {3}, " +
                                     " Quantity = {4}, " +
-                                    " IsReceived = {5}, " + 
-                                    " CostPrice = {6} " +
-                                    " WHERE PurchaseOrderId = {7}";
+                                    " IsReceived = {5} " + 
+                                    " WHERE PurchaseOrderId = {6}";
         readonly string qryCountReceviedLiens = "SELECT count(1) FROM StockMovement WHERE PurchaseOrderId = {0}";
         readonly string qryDeletePO = "DELETE FROM PurchaseOrder WHERE PurchaseOrderId = {0}";
         
@@ -49,8 +48,7 @@ namespace TestCore.Models.SqlRepository
                                     purchaseOrder.ConvRate,
                                     purchaseOrder.RMBRate,
                                     purchaseOrder.Quantity,
-                                    Convert.ToInt16(purchaseOrder.IsReceived),
-                                    purchaseOrder.CostPrice), trans);
+                                    Convert.ToInt16(purchaseOrder.IsReceived)), trans);
 
                     trans.Commit();
                 }
@@ -79,7 +77,6 @@ namespace TestCore.Models.SqlRepository
                                     purchaseOrder.RMBRate,
                                     purchaseOrder.Quantity,
                                     Convert.ToInt16(purchaseOrder.IsReceived),
-                                    purchaseOrder.CostPrice,
                                     purchaseOrder.PurchaseOrderId));
                 con.Close();
             }
@@ -135,8 +132,7 @@ namespace TestCore.Models.SqlRepository
                 RMBRate = Convert.ToDecimal(r["RMBRate"]),
                 Quantity = Convert.ToInt32(r["Quantity"]),
                 IsReceived = Convert.ToBoolean(r["IsReceived"]),
-                ReceivedQuantity = Convert.ToInt32(r["ReceivedQuantity"]),
-                CostPrice = Convert.ToDecimal(r["CostPrice"])
+                ReceivedQuantity = Convert.ToInt32(r["ReceivedQuantity"])
                 
             };
         }

@@ -80,7 +80,7 @@ namespace TestCore.Models.SqlRepository
         public List<Location> GetLocations()
         {
             List<Location> locations = new List<Location>();
-            string query = string.Format("SELECT * from Location;");
+            string query = string.Format("SELECT * from Location ORDER BY LocationCode;");
 
             using (SqlConnection _con = new SqlConnection(DBHelper.ConnectionString))
             {

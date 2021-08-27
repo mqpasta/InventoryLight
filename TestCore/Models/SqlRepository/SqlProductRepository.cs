@@ -100,11 +100,22 @@ namespace TestCore.Models.SqlRepository
         public IEnumerable GetProducts()
         {
             List<Product> products = new List<Product>();
-            string query = "with cte_po AS ( select ProductId, Max(PurchaseOrderId) as LastPO " +
-                " from PurchaseOrder Group By ProductId ) " +
-                "Select P.*, ISNULL(PO.CostPrice,0) AS CostPrice from PurchaseOrder PO Inner Join cte_po CPO " +
-                " ON PO.PurchaseOrderId = CPO.LastPO Right Join Product P " +
-                "ON P.ProductId = PO.ProductId";
+            string query = ";with cte_ProductDate AS (" +
+                "select ProductId, Max(Date) as MaxDate " +
+                "from StockMovement WHERE PurchaseOrderId IS NOT NULL " +
+                " Group By ProductId )," +
+                "cte_Latest AS ( " +
+                "SELECT PD.ProductId, PD.MaxDate, MAX(SM.LastUpdate) AS MaxLast " +
+                " From cte_ProductDate PD Inner Join StockMovement SM " +
+                " ON PD.ProductId = SM.ProductId " +
+                " AND PD.MaxDate = SM.Date " +
+                " AND PurchaseOrderId IS NOT NULL " +
+                " GROUP BY PD.ProductId, PD.MaxDate ) " +
+                " Select P.*, ISNULL(SM.PurchasePrice, 0) AS CostPrice from StockMovement SM " +
+                " Inner Join cte_Latest X ON X.MaxDate = SM.Date AND X.ProductId = SM.ProductId " +
+                " AND SM.LastUpdate >= X.MaxLast AND SM.PurchaseOrderId IS NOT NULL " +
+                " RIGHT JOIN Product P ON P.ProductId = SM.ProductId " +
+                " ORDER BY P.ProductCode";
 
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {

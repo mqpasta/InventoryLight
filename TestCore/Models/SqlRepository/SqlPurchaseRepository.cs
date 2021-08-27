@@ -194,7 +194,7 @@ namespace TestCore.Models.SqlRepository
 
         public IEnumerable GetPurchases(long purchaseOrderId)
         {
-            string qryReceviedLiens = "SELECT * FROM StockMovement WHERE PurchaseOrderId = {0}";
+            string qryReceviedLiens = "SELECT * FROM StockMovement WHERE PurchaseOrderId = {0} ORDER BY DATE";
             List<PurchaseMovement> movements = new List<PurchaseMovement>();
 
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
@@ -218,7 +218,7 @@ namespace TestCore.Models.SqlRepository
         {
             List<PurchaseMovement> purchaseMovements = new List<PurchaseMovement>();
 
-            string query = "select * from StockMovement where StockMovementType = {0} and PurchaseOrderId IS NULL";
+            string query = "select * from StockMovement where StockMovementType = {0} and PurchaseOrderId IS NULL ORDER BY DATE";
             using (SqlConnection con = new SqlConnection(DBHelper.ConnectionString))
             {
                 DataSet ds = DBHelper.LoadData(con,
